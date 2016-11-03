@@ -1,0 +1,71 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript" src="{/$basePath/}/www/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	//修改
+	function modify_fund(id)
+	{
+		var title='修改样品需求';
+		var url="{/spUrl c=sampleController a=addSampleAc/}";
+		url+='&id='+id;
+		var id='addSampleAc'+Math.floor(Math.random()*1000+1);
+		parent.addNewTab(id,title,url);
+		return false;
+	}
+	//删除
+	function delete_fund(id,file)
+	{
+		var url="{/spUrl c=sampleController a=deleteSampleAc/}";
+		$.post(url,{id:id,file:file},function(res){
+			alert(res.msg);
+			if(res.success){
+				window.location.href=window.location.href;
+				window.location.reload();
+			}
+		},'json');
+	}
+</script>
+<div class="jj_rightcont" >
+	<form action="{/spUrl c=sampleController a=sampleListAc/}" method="post" id='paymentForm'>
+		<div class="jj_toptitle" ><b>样品需求管理</b>&nbsp;&nbsp;&nbsp;&nbsp;
+			样品名称：
+			<input type='text' name='name' id='name' value='{/$name/}'/>
+			&nbsp;&nbsp;
+			样品要求：
+			<input type='text' name='content' id='content' value='{/$content/}'/>
+			&nbsp;&nbsp;
+			<input name="button" type="submit"  value="查询" class='btn_44' />
+		</div>
+    <table class="n_tablebox" style="width: 1050px">
+        <tr class="firsttitle">
+			<td width="100">样品需求日期</td>
+			<td width="100">业务员</td>
+			<td width="100">样品名称</td>
+            <td width="50">相关文件</td>
+            <td width="100">状态</td>
+            <td width="100">状态更新时间</td>
+            <td width="50">操作</td>
+        </tr>
+        {/foreach from=$data.data item=row name=a/}
+        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+            <td>{/$row.date/}</td>
+            <td>{/$row.opername/}</td>
+            <td>{/$row.name/}</td>
+            <td>{/if $row.src==''/}无文件{/else/}<a href='{/$row.src/}' class='qxQt'>下载</a>{//if/}</td>
+            <td>{/$row.status/}</td>
+            <td>{/$row.datetime/}</td>
+            <td><a onclick="modify_fund('{/$row.id/}');return false;" href="#" title="编辑"  class="qxModify"><img
+				src="{/$basePath/}/www/images/edit.gif" border="0" height="16"
+                width="16"></a>&nbsp;&nbsp;
+				<a onclick="delete_fund('{/$row.id/}','{/$row.file/}');return false;" href="#" title="删除" class="qxDelete"><img
+				src="{/$basePath/}/www/images/delete.png" border="0" height="16"
+				width="16"></a>
+			</td>
+        </tr>
+        {//foreach/}
+        <tr>
+        	<td colspan='7'>{/$data.linkBar/}</td>
+        </tr>
+    </table>
+    </form>
+</div>
+{/include file='templates/footer.html'/}

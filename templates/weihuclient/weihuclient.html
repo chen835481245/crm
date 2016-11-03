@@ -1,0 +1,64 @@
+{/include file='templates/header.html'/}
+<div class="jj_rightcont" >
+	<form action="{/spUrl c=weihuclientController a={/$act/}/}" method="post" id='paymentForm'>
+		<div class="jj_toptitle" ><b>{/$title/}</b>&nbsp;&nbsp;&nbsp;&nbsp;
+		{/if $level>2/}
+			业务员：
+			<select id='operid' name='operid' style='width:200px;'>
+				<option value=''>--全部--</option>
+				{/html_options options=$operids selected=$operid/}
+			</select>
+			{//if/}
+			<input  type="submit"  value="查询" class='btn_44' onclick="return outFun(0);"/>&nbsp;
+		</div>
+    <table class="n_tablebox" style="width: 1050px">
+        <tr class="firsttitle">
+			<td width="100">客户姓名</td>
+            <td width="100">客户邮箱</td>
+            <td width="100">客户类型</td>
+            <td width="100">跟进时间</td>
+            <td width="100">业务员</td>
+            <td width="100">操作</td>
+        </tr>
+        {/foreach from=$data.data item=row name=a/}
+        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+            <td>{/$row.first_name/} {/$row.last_name/}</td>
+            <td>{/$row.mail/}</td>
+            <td>{/$row.client_type_name/}</td>
+            <td>{/$row.follow_time/}</td>
+            <td>{/$row.opername/}</td>
+            <td>
+            	<a onclick="add_dynamic('{/$row.id/}');return false;" href="#" title="增加动态"  class="qxQt">增加动态 </a>&nbsp;&nbsp;
+				<a onclick="add_market('{/$row.id/}');return false;" href="#" title="增加营销" class="qxQt">增加营销</a>
+			</td>
+        </tr>
+        {//foreach/}
+        <tr>
+        	<td colspan='6'>{/$data.linkBar/}</td>
+        </tr>
+    </table>
+    </form>
+</div>
+<script type="text/javascript">
+//修改
+function add_dynamic(id)
+{
+	var title='增加客户日常动态';
+	var url="{/spUrl c=recordController a=dynamicAddAc/}";
+	url+='&client_id='+id;
+	var id='dynamicAddAc'+Math.floor(Math.random()*1000+1);
+	parent.addNewTab(id,title,url);
+	return false;
+}
+//修改
+function add_market(id)
+{
+	var title='增加客户营销动态';
+	var url="{/spUrl c=recordController a=marketAddAc/}";
+	url+='&client_id='+id;
+	var id='marketAddAc'+Math.floor(Math.random()*1000+1);
+	parent.addNewTab(id,title,url);
+	return false;
+}
+</script>
+{/include file='templates/footer.html'/}

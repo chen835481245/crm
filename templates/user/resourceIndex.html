@@ -1,0 +1,128 @@
+{/include file="header.html"/}
+<link href="{/$basePath/}/www/js/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="{/$basePath/}/www/js/ztree/jquery.ztree.min.js"></script>
+<div class="jj_rightcont" >
+    <div class="jj_toptitle" ><b>资源管理</b>
+
+    </div>
+    <input type="button" value="新增顶级资源" onclick="addResource(-1)" class="btn_73">
+    <table class="n_tablebox" style="width: 1000px;height: 1000px;">
+        <tr>
+            <td valign="top"><ul id="tree" class="tree" style="width:96%;height:99%;overflow:auto;"></ul></td>
+        </tr>
+    </table>
+</div>
+
+{/include file="footer.html"/}
+<script language="javascript">
+    var IDMark_Switch = "_switch";
+    var IDMark_Icon = "_ico";
+    var IDMark_Span = "_span";
+    var IDMark_Input = "_input";
+    var IDMark_Check = "_check";
+    var IDMark_Edit = "_edit";
+    var IDMark_Remove = "_remove";
+    var IDMark_Ul = "_ul";
+    var IDMark_A = "_a";
+    var url = "{/$url/}";
+    var resourceAddUrl = "{/spUrl c='userController' a='sourceAddAc'/}";
+    var resourceModifyUrl = "{/spUrl c='userController' a='sourceModifyAc'/}";
+    var resourceDeleteUrl = "{/spUrl c='userController' a='sourceDeleteAc'/}";
+    function search_invoice()
+    {
+        var customerClass = $('#customerClass').val();
+        var saler_seq = $('#saler_seq').val();
+        var cs_seq = $('#cs_seq').val();
+        var cs_name = $('#cs_name').val();
+        var invoice_code=$('#invoice_code').val();
+        var jumpurl = url+'?customerClass='+customerClass+'&saler_seq='+saler_seq+'&cs_seq='+cs_seq+'&cs_name='+cs_name+'&invoice_code='+invoice_code;
+        window.location.href = jumpurl;
+    }
+    function selectAll()
+    {
+        var user_all = $('#user_all').is(':checked');
+        $("input[name^=user]").attr("checked", user_all);
+    }
+
+    function addResource(id)
+    {
+        var resourceAddUrl2 = resourceAddUrl+'&rs_code='+id;
+        openModelDialog(resourceAddUrl2,650,450);
+    }
+    function modifyResource(id)
+    {
+        var resourceModifyUrl2 = resourceModifyUrl+'&rs_code='+id;
+        openModelDialog(resourceModifyUrl2,650,450);
+    }
+    function deleteResource(id)
+    {
+		if(confirm('确定删除该资源吗？')){
+			var url='{/spUrl c=userController a=sourceDelAc/}';
+			param="rescode="+id;
+			commonAjax(url,param,deleteResourceBack);
+		}        
+    }
+    function deleteResourceBack(res)
+    {
+        alert(res.msg);
+        if(res.success){
+			location.reload();
+        }
+    }
+    function addHoverDom(treeId, treeNode) {
+        var aObj = $("#" + treeNode.tId + IDMark_A);
+        if ($("#diyBtn1_"+treeNode.id).length>0) return;
+        if ($("#diyBtn2_"+treeNode.id).length>0) return;
+        if ($("#diyBtn3_"+treeNode.id).length>0) return;
+        var editStr = '';
+        var type = '';
+        if (treeNode.rs_class == 1) {
+            type = '树';
+        }
+        else if (treeNode.rs_class == 2) {
+            type = '功能';
+        }
+        //新增
+        editStr += "<a id='diyBtn1_" +treeNode.id+ "' onclick='addResource(\""+treeNode.rescode+"\");return false;'>新增</a>";
+        //修改
+        editStr +="<a id='diyBtn2_" +treeNode.id+ "' onclick='modifyResource(\""+treeNode.rescode+"\");return false;'>修改</a>";
+        //删除
+        editStr +="<a id='diyBtn3_" +treeNode.id+ "' onclick='deleteResource(\""+treeNode.rescode+"\");return false;'>删除</a>";
+        editStr += "<span id='text_" +treeNode.id+ "'>&nbsp;&nbsp;(资源编码："+treeNode.rescode+"，排序号："+treeNode.resindex+")</span>";
+        aObj.after(editStr);
+    }
+
+    
+
+
+    function removeHoverDom(treeId, treeNode) {
+        $("#text_"+treeNode.id).remove();
+        $("#diyBtn1_"+treeNode.id).unbind().remove();
+        $("#diyBtn2_"+treeNode.id).unbind().remove();
+        $("#diyBtn3_"+treeNode.id).unbind().remove();
+    }
+    var zTree;
+
+    var setting = {
+        addHoverDom: addHoverDom,
+        removeHoverDom: removeHoverDom,
+        //addDiyDom:addHoverDom,
+        isSimpleData: true,
+        treeNodeKey: "rescode",
+        treeNodeParentKey: "pId",
+        showLine: true,
+        root:{
+            isRoot:true,
+            nodes:[]
+        }
+    };
+
+    var zTreeNodes = '';
+    $(document).ready(function(){
+        var treedata = $.parseJSON('{/$treedata/}');
+
+        zTreeNodes = treedata;
+        zTree=$("#tree").zTree(setting,zTreeNodes);
+        zTree.expandAll(true);
+    });
+</script>

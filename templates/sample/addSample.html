@@ -1,0 +1,102 @@
+{/include file='templates/header.html'/}
+<script src="{/$basePath/}/www/js/uploadify/js/swfobject.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="{/$basePath/}/www/js/uploadify/css/uploadify.css">
+<script src="{/$basePath/}/www/js/uploadify/js/jquery.uploadify.js" type="text/javascript"></script>
+<script type="text/javascript" src="{/$basePath/}/www/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	//确定提交
+	function submitFun()
+	{
+		var postUrl="{/spUrl c=sampleController a=doAddSampleAc/}";
+		ajax_submit(postUrl, 'add');
+	}	
+	$(function(){
+		$('#urlFile').uploadify({
+			formData : {'filedir' : '','pathtype':'date'},
+			'swf'      : '{/$basePath/}/www/js/uploadify/uploadify.swf',
+			'uploader' : '{/spUrl c=UploadController a=uploadFileAc/}',
+			'auto' : true,
+			'queueSizeLimit' : 1,//数量限制
+			'fileSizeLimit':'200MB',//大小限制
+			'fileTypeExts' : '*',//后缀名
+			'multi'       : false,
+			'onSelect' : function(file)
+			{
+				$('#complete').val('0');
+			},
+			'onUploadSuccess' : function(file, data, response) 
+			{
+				var dataRes=$.parseJSON(data);
+				if(!dataRes['success']){alert(dataRes['msg']);return false;}
+				$("#src").val(dataRes['filePath']);
+			}
+		});	
+	});
+		function removeChart(){
+		    try{
+		       $("div").remove();
+		       $("#chart").empty();//其中chart就是包含flash的div的id
+		    }catch(e){
+		    }
+		  }
+</script>
+<body class="h100b over_hidden" id="body" onbeforeunload="removeChart()"  onunload="removeChart()">
+	<div class="jj_rightcont" >
+    	<div class="jj_toptitle" ><strong>{/$title/}</strong></div>
+    	<form name="add">
+    		<input type="hidden" value='{/$data.id/}' name='id' id='id'/>
+    		
+    		<input type="hidden" value='{/$data.src/}' name='src' id='src'/>
+    		<input type="hidden" value='{/$data.src/}' name='srcOld' id='srcOld'/>
+    		<table  class="n_tablebox" style="width: 500px">
+   			<tr>
+				<td>操作时间：</td>
+				<td>{/$datetime/}</td>
+   			</tr>
+   			<tr>
+				<td>业务员：</td>
+				<td>
+					<select name='operid' id='operid' style='width:207px;'>
+						{/html_options options=$opernames selected=$data.operid/}
+					</select>
+				</td>
+   			</tr>
+   			<tr>
+				<td>样品名称：</td>
+				<td><input name="name" type="text" class="input_text"   style='width:200px;' id="name" value="{/$data.name/}"/></td>
+   			</tr>
+   			<tr>
+				<td>样品需求日期：</td>
+				<td>
+					<input type='text' style='width:200px;' value='{/$data.date/}' name='date' id='date' onclick='WdatePicker({dateFmt:"yyyy-MM-dd",autoUpdateOnChanged:true})'/>
+				</td>
+   			</tr>
+   			<tr>
+				<td>样品要求：</td>
+				<td>
+					<textarea name="content" cols="85" rows="6" id="content" >{/$data.content/}</textarea>
+				</td>
+   			</tr>
+   			<tr>
+				<td>相关文件：</td>
+				<td>
+					<input type="file" name='urlFile' id='urlFile'/>
+				</td>
+   			</tr>
+   			<tr>
+				<td>状态：</td>
+				<td>
+					<select name='status' id='status' style='width:207px;'>
+						{/html_options options=$statusData selected=$data.status/}
+					</select>
+				</td>
+   			</tr>
+   			</table>
+   			<table  class="n_tablebox" style="width: 500px">
+   				<tr class="firsttitle">
+   					<td><input type="button" value="确定" class='btn_44' onclick="submitFun()"></td>
+   				</tr>
+   			</table>
+    	</form>
+    </div>
+{/include file='templates/footer.html'/}

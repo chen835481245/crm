@@ -1,0 +1,41 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript">
+	//确定提交
+	function submitFun()
+	{
+		var deptid=$("#deptid").val();
+		var name=$("#name").val();
+		if(deptid==''){alert('部门编号不能为空');$("#deptid").focus();return false;}
+		if(name==''){alert('部门名称不能为空');$("#name").focus();return false;}
+		var postUrl="{/spUrl c=userController a={/$action/}/}";
+		ajax_submit(postUrl, 'add');
+	}	
+</script>
+	<div class="jj_rightcont" >
+    	<div class="jj_toptitle" ><strong>{/$title/}</strong></div>
+    	<form name="add">
+    		<table  class="n_tablebox" style="width: 500px">
+    		<tr>
+				<td>部门编号：</td>
+				<td>
+					<input name="deptid" type="text" class="input_text"  id="deptid" value="{/$data.deptid/}" {/if $action=='doDeptUpdateAc'/}disabled{//if/}/>
+					{/if $action=='doDeptUpdateAc'/}<input type='hidden' value="{/$data.deptid/}" name='deptid' />{//if/}
+				</td>
+   			</tr>
+            <tr>
+				<td>部门名称：</td>
+				<td><input name="name" type="text" class="input_text"  id="name" value="{/$data.dept_name/}"/></td>
+   			</tr>
+   			  <tr>
+				<td>部门备注：</td>
+				<td><input name="mark" type="text" class="input_text"  id="mark" value="{/$data.remark/}"/></td>
+   			</tr>
+   			</table>
+   			<table  class="n_tablebox" style="width: 500px">
+   				<tr class="firsttitle">
+   					<td><input type="button" value="确定" class='btn_44' onclick="submitFun()"></td>
+   				</tr>
+   			</table>
+    	</form>
+    </div>
+{/include file='templates/footer.html'/}

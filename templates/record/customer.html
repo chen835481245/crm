@@ -1,0 +1,64 @@
+{/include file='templates/header.html'/}
+
+<div class="jj_rightcont" >
+	<form action="{/spUrl c=recordController a=customerAc/}" method="post" id='form1' >
+		<input type='hidden' name='selectType' id='selectType' value='1'/> 
+		<div class="jj_toptitle" >
+			邮箱：
+			<input type="text" name='mail' id='mail' value='{/$params['mail']/}'>
+			<input  type="submit"  value="查询" class='btn_44' onclick="return subFun(1)"/>&nbsp;
+		</div>
+		</form>
+    <table class="n_tablebox" style="width: 1100px">
+        <tr class="firsttitle">
+			<td width="100">时间</td>
+			<td width="100">客户</td>
+			<td width="100">动态内容</td>
+            <td width="100">操作人</td>
+        </tr>
+		{/if $data.data1/}
+        {/foreach from=$data.data1 item=row name=a/}
+        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+            <td>{/$row.date/}</td>
+			<td>{/$row.first_name/}&nbsp;&nbsp;{/$row.last_name/}</td>
+            <td>{/$row.content/}</td>
+            <td>{/$row.opername/}</td>
+        </tr>
+        {//foreach/}
+		{/else/}
+		<tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+            <td colspan='4'>暂无数据</td>
+        </tr>
+		{//if/}
+    </table>
+	<table class="n_tablebox" style="width: 1100px">
+        <tr class="firsttitle">
+			<td width="100">时间</td>
+			<td width="100">客户</td>
+			<td width="100">动态内容</td>
+            <td width="100">操作人</td>
+        </tr>
+		{/if $data.data2/}
+        {/foreach from=$data.data2 item=row name=a/}
+        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+            <td>{/$row.date/}</td>
+			<td>{/$row.first_name/}&nbsp;&nbsp;{/$row.last_name/}</td>
+            <td>{/$row.content/}</td>
+            <td>{/$row.opername/}</td>
+        </tr>
+        {//foreach/}
+		{/else/}
+		<tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+            <td colspan='4'>暂无数据</td>
+        </tr>
+		{//if/}
+    </table>
+</div>
+<script>
+function subFun(selectType)
+{
+	$("#selectType").val(selectType);
+	return true;
+}
+</script>
+{/include file='templates/footer.html'/}

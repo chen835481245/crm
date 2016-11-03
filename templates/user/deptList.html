@@ -1,0 +1,68 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript">
+	function add_fund()
+	{
+		var url="{/spUrl c=userController a=deptAddAc/}";
+		openModelDialog(url,550,400);
+	}
+	//修改
+	function modify_fund(deptid)
+	{
+		var url="{/spUrl c=userController a=deptUpdateAc/}";
+		url+='&deptid='+deptid;
+		openModelDialog(url,550,400);
+	}
+	//删除
+	function delete_fund(deptid)
+	{
+		var url="{/spUrl c=userController a=doDeptDeleteAc/}";
+		var param="&deptid="+deptid;
+		if(confirm('确定删除此部门?')){
+			commonAjax(url,param,delBack);
+		}
+	}
+	function delBack(res)
+	{
+		if(res){
+			alert(res.msg);
+			window.location.href=window.location.href;
+			window.location.reload();
+		}
+	}
+	
+</script>
+<div class="jj_rightcont" >
+	<div class="jj_toptitle" ><b>部门列表</b>&nbsp;&nbsp;&nbsp;&nbsp;
+    <input name="button" type="button" onclick="add_fund();" value="新增" class='btn_44 qxAdd'/>
+	</div>
+    <table class="n_tablebox" style="width: 600px">
+        <tr class="firsttitle">
+			<td width="50">部门编号</td>
+            <td width="100">部门名称</td>
+            <td width="100">部门备注</td>
+            <td width="50">操作</td>
+        </tr>
+        {/if $data/}
+	        {/foreach from=$data.data item=row name=a/}
+	        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+				<td>{/$row.deptid/}</td>
+	            <td>{/$row.dept_name/}</td>
+	            <td>{/$row.remark/}</td>
+	            <td><a onclick="modify_fund('{/$row.deptid/}');return false;" href="#" title="编辑"  class="qxModify"><img
+					src="{/$basePath/}/www/images/edit.gif" border="0" height="16"
+	                width="16"></a>&nbsp;&nbsp;
+					<a onclick="delete_fund('{/$row.deptid/}');return false;" href="#" title="删除" class="qxDelete"><img
+					src="{/$basePath/}/www/images/delete.png" border="0" height="16"
+					width="16"></a>
+				</td>
+	        </tr>
+	        {//foreach/}
+	        <tr>
+	        	<td colspan='10'>{/$data.linkBar/}</td>
+	        </tr>
+        {//if/}	
+    </table>
+</div>
+
+
+{/include file='templates/footer.html'/}

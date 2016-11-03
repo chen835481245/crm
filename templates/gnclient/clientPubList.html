@@ -1,0 +1,127 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript" src="{/$basePath/}/www/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	//修改
+	function modify_fund(id)
+	{
+		var title='修改客户';
+		var url="{/spUrl c=gnclientController a=addClientAc/}";
+		url+='&id='+id;
+		var id='addClientAc'+Math.floor(Math.random()*1000+1);
+		parent.addNewTab(id,title,url);
+		return false;
+	}
+	//删除
+	function delete_fund(id,file)
+	{
+		var url="{/spUrl c=gnclientController a=deleteClientAc/}";
+		$.post(url,{id:id,file:file},function(res){
+			alert(res.msg);
+			if(res.success){
+				var url="{/spUrl c=gwclientController a=clientPubListAc/}";
+				window.location.href=url+"&isSelect=1";
+			}
+		},'json');
+	}
+</script>
+<div class="jj_rightcont" >
+	<form action="{/spUrl c=gnclientController a=clientPubListAc/}" method="post" id='paymentForm'>
+		<div class="jj_toptitle" >
+			<input type="hidden" value='1' name='isSelect' />
+			<input type="hidden" value='0' name='out' id='out'/>
+			客户公司名称：
+			<input type='text' name='company_name' id='company_name' value='{/$company_name/}'/>
+			&nbsp;
+			客户姓名：
+			<input type='text' name='first_name' id='first_name' value='{/$first_name/}'/>
+			&nbsp;
+			邮箱：
+			<input type='text' name='mail' id='mail' value='{/$mail/}'/>
+			&nbsp;
+			日期：
+			<input type='text' style='width:80px;' value='{/$begin_date/}' name='begin_date' id='begin_date' onclick='WdatePicker({dateFmt:"yyyy-MM-dd",autoUpdateOnChanged:true})'/>
+			至
+			<input type='text' style='width:80px;' value='{/$end_date/}' name='end_date' id='end_date' onclick='WdatePicker({dateFmt:"yyyy-MM-dd",autoUpdateOnChanged:true})'/>
+			&nbsp;
+			<input  type="submit"  value="查询" class='btn_44' onclick="return outFun(0);"/>&nbsp;
+			<input  type="button"  value="转为私" class='btn_44' onclick="toMine()"/>&nbsp;
+			<input  type="submit"  value="导出" class='btn_44 qxQt' onclick="return outFun(1);" />
+		</div>
+    <table class="n_tablebox" style="width: 1050px">
+        <tr class="firsttitle">
+        	<td width="40" align="left"><input type="checkbox" id='checkboxAll'/>全选</td>
+			<td width="100">客户姓名</td>
+			<td width="100">客户公司名称</td>
+			<td width="100">客户类型</td>
+			<td width="100">客户邮箱</td>
+            <td width="50">客户电话</td>
+            <td width="100">客户在线工具</td>
+            <td width="100">创建日期</td>
+            <td width="100">操作</td>
+        </tr>
+        {/foreach from=$data.data item=row name=a/}
+        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+        	<td><input type="checkbox" value='{/$row.id/}' class='checkboxclass'/></td>
+            <td>{/$row.first_name/}</td>
+            <td>{/$row.company_name/}</td>
+            <td>{/$row.type_name/}</td>
+            <td>{/$row.mail/}</td>
+            <td>{/$row.phone/}</td>
+            <td>{/$row.tool_number/}</td>
+            <td>{/$row.datetime/}</td>
+            <td>
+            	<a onclick="get_more('{/$row.id/}');return false;" href="#" title="详细">详细</a>&nbsp;&nbsp;
+            	<a onclick="modify_fund('{/$row.id/}');return false;" href="#" title="编辑"  class="qxModify"><img
+				src="{/$basePath/}/www/images/edit.gif" border="0" height="16"
+                width="16"></a>&nbsp;&nbsp;
+				<a onclick="delete_fund('{/$row.id/}','{/$row.file/}');return false;" href="#" title="删除" class="qxDelete"><img
+				src="{/$basePath/}/www/images/delete.png" border="0" height="16"
+				width="16"></a>
+			</td>
+        </tr>
+        {//foreach/}
+        <tr>
+        	<td colspan='9'>{/$data.linkBar/}</td>
+        </tr>
+    </table>
+    </form>
+</div>
+<script type="text/javascript">
+	function get_more(id)
+	{
+		var url="{/spUrl c=gnclientController a=clientMoreAc/}&id="+id;
+		openModelDialog(url,800,400);
+	}
+	function toMine()
+	{
+		var idStr='';
+		$('.checkboxclass').each(function(){
+			if(this.checked){
+				idStr+=','+$(this).attr('value');
+			}		
+		});
+		idStr=idStr.substr(1);
+		if(idStr==''){
+			alert('未选中任何记录，操作无效');return false;
+		}
+		$.post("{/spUrl c=gnclientController a=toMineAc/}",{id:idStr},function(res){
+			alert(res.msg);
+			if(res.success){
+				var url="{/spUrl c=gnclientController a=clientPubListAc/}";
+				window.location.href=url+"&isSelect=1";
+			}
+		},'json');
+	}
+	function outFun(type)
+	{
+		$("#out").val(type);
+		$("form").submit();
+	}
+	$(function(){
+		$("#checkboxAll").click(function(){
+			var checkFlag=this.checked;
+			$(".checkboxclass").attr("checked",checkFlag);
+		});
+	});
+</script>
+{/include file='templates/footer.html'/}

@@ -1,0 +1,95 @@
+{/include file='templates/header.html'/}
+	<div class="jj_rightcont" >
+    	<div class="jj_toptitle" ><strong>{/$title/}</strong>
+    		&nbsp;&nbsp;&nbsp;&nbsp;
+    		check校验公司名称和客户电话，来判断用户的唯一性
+    	</div>
+    	<form name="add" action="{/spUrl c=gnclientController a=doAddClientAc/}" method="post">
+    		<input type="hidden" value='{/$data.id/}' name='id' id='id'/>
+    		<input type="hidden" value='China' name='country' id='country'/>
+    		<table  class="n_tablebox" style="width: 800px">
+	            <tr>
+					<td><font color=red>*</font>客户持有者：</td>
+					<td>
+						<select id='operid' name='operid'>
+							{/html_options options=$operids selected=$data.operid/}
+						</select>
+					</td>
+					<td><font color=red>*</font>客户类型：</td>
+					<td>
+						<select id='client_type' name='client_type'>
+							{/html_options options=$client_types selected=$data.client_type/}
+						</select>
+					</td>
+	   			</tr>
+	   			<tr>
+					<td><font color=red>*</font>客户名称：</td>
+					<td><input type='text' name='first_name' id='first_name' value='{/$data.first_name/}'></td>
+					<td><font color=red>*</font>客户电话：</td>
+					<td><input type='text' name='phone' id='phone' value='{/$data.phone/}'></td>
+	   			</tr>
+	   			<tr>
+					<td>公司名称：</td>
+					<td><input type='text' name='company_name' id='company_name' value='{/$data.company_name/}'></td>
+					<td>客户邮箱：</td>
+					<td><input type='text' name='mail' id='mail' value='{/$data.mail/}'></td>
+	   			</tr>
+	   			<tr>
+					<td>客户手机：</td>
+					<td><input type='text' name='mobile_phone' id='mobile_phone' value='{/$data.mobile_phone/}'></td>
+					<td>客户在线工具：</td>
+					<td>
+						<input type='text' name='tool_number' id='tool_number' value='{/$data.tool_number/}'>
+						<br>格式:QQ: 123209358,Skype:chinaflashlight
+					</td>
+	   			</tr>
+	   			<tr>
+					<td>客户公司网址：</td>
+					<td colspan="3"><input type='text' name='url' id='url' value='{/$data.url/}'></td>
+	   			</tr>
+	   			<tr>
+					<td>备注：</td>
+					<td colspan="3">
+						<textarea rows="5" cols="5" name='remark'>{/$data.remark/}</textarea>
+					</td>
+	   			</tr>
+   			</table>
+   			<table  class="n_tablebox" style="width: 800px">
+   				<tr class="firsttitle">
+   					<td>
+	   					<input type="button" value="check" class='btn_44' onclick="checkFun()">
+	   					&nbsp;&nbsp;&nbsp;
+	   					<input type="button" value="确定" class='btn_44' onclick="return submitFun()">
+   					</td>
+   				</tr>
+   			</table>
+    	</form>
+    </div>
+    <script type="text/javascript">
+    	function submitFun()
+    	{
+        	if(!checkNull('first_name','客户名称'))return false;
+        	if(!checkNull('phone','客户电话'))return false;
+        	var mail =$("#mail").val();
+        	if(mail!=''){
+        		var isok=checkEmail(mail);
+        		if(isok!=1){
+					alert('邮箱格式不正确');
+					return false;
+            	}
+            }
+			$("form").submit();
+        }
+        function checkFun()
+        {
+            var company_name=$("#company_name").val();
+            var phone=$("#phone").val();
+            if(!company_name){alert('请先填写公司名称');return false;}
+            if(!phone){alert('请先填写客户电话');return false;}
+			$.post("{/spUrl c=gnclientController a=checkClientAc/}",{company_name:company_name,phone:phone},function(res){
+				alert(res.msg);
+			},'json');
+        }
+        
+    </script>
+{/include file='templates/footer.html'/}

@@ -1,0 +1,74 @@
+{/include file='templates/header.html'/}
+	<div class="jj_rightcont" >
+    	<div class="jj_toptitle" ><strong>{/$title/}</strong></div>
+    	<form name="add" action="{/spUrl c=pwdController a=doAddPwdAc/}" method="post">
+    		<input type="hidden" value='{/$data.id/}' name='id'/>
+    		<input type="hidden" value='{/$data.str/}' name='str' id='str'/>
+    		<table  class="n_tablebox" style="width: 800px">
+	            <tr>
+					<td>操作员：</td>
+					<td>
+						{/$name/}
+					</td>
+					<td><font color=red>*</font>密码类型：</td>
+					<td>
+						<select id='type_id' name='type_id'>
+							{/html_options options=$types selected=$data.type_id/}
+						</select>
+					</td>
+	   			</tr>
+	   			<tr>
+					<td><font color=red>*</font>用户名：</td>
+					<td><input type='text' name='username' id='username' value='{/$data.username/}'></td>
+					<td><font color=red>*</font>用户密码：</td>
+					<td><input type='text' name='pwd' id='pwd' value='{/$data.pwd/}'></td>
+	   			</tr>
+	   			<tr>
+					<td>网站地址：</td>
+					<td><input type='text' name='url' id='url' value='{/$data.url/}'></td>
+					<td>登陆后台地址：</td>
+					<td><input type='text' name='admin_url' id='admin_url' value='{/$data.admin_url/}'></td>
+	   			</tr>
+	   			<tr>
+					<td>使用人：</td>
+					<td colspan=3>
+						<div style='height:200px;overflow:scroll;'>
+							{/foreach from=$operids key=key item=row name=a/}
+								<div><input type='checkbox' value='{/$row.operid/}' class='ckClass' {/if $row.check/}checked{//if/}/>{/$row.name/}</div>
+							{//foreach/}
+						</div>
+					</td>
+	   			</tr>
+	   			<tr>
+					<td>备注：</td>
+					<td colspan="3">
+						<textarea rows="10" cols="10" style='width:80%' name='remark'>{/$data.remark/}</textarea>
+					</td>
+	   			</tr>
+   			</table>
+   			<table  class="n_tablebox" style="width: 800px">
+   				<tr class="firsttitle">
+   					<td><input type="button" value="确定" class='btn_44' onclick="return submitFun()"></td>
+   				</tr>
+   			</table>
+    	</form>
+    </div>
+    <script type="text/javascript">
+    	function submitFun()
+    	{
+        	if(!checkNull('username','用户名'))return false;
+        	if(!checkNull('pwd','用户密码'))return false;
+        	var str='';
+        	$('.ckClass').each(function(){
+				if(this.checked){
+					str+=','+$(this).attr("value");
+				}
+            });
+            if(str==''){alert('请选择使用者');return false;}
+            str=str.substr(1,str.length);
+            $("#str").val(str);
+			$("form").submit();        	
+			
+        }
+    </script>
+{/include file='templates/footer.html'/}

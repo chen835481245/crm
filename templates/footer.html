@@ -1,0 +1,35 @@
+</body>
+<script type="text/javascript">
+$(function(){
+	try{
+		var rescode='{/$qxRescode/}';
+		var userInfoObj=$.parseJSON('{/$userInfo/}');
+		var permission=userInfoObj[rescode];
+		//查看、新增、修改、删除、导出
+		var ck=permission.substr(0,1);
+		var xz=permission.substr(1,1);
+		var xg=permission.substr(2,1);
+		var sc=permission.substr(3,1);
+		var dc=permission.substr(4,1);
+		var qt=permission.substr(5,1);
+		if(xz!=1){
+			$(".qxAdd").hide();
+		}
+		if(xg!=1){
+			$(".qxModify").hide();
+		}
+		if(sc!=1){
+			$(".qxDelete").hide();
+		}
+		if(dc!=1){
+			$(".qxOut").hide();
+		}
+		if(qt!=1){
+			$(".qxQt").hide();
+		}
+	}catch (e) {
+		//alert('error');
+	}
+});
+</script>
+</html>

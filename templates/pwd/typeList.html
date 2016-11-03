@@ -1,0 +1,74 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript">
+	//修改
+	function modify_fund(id,name)
+	{
+		$("#addBtn").val('修改');
+		$("#type").val(2);
+		$("#id").val(id);
+		$("#name").val(name);
+	}
+	//删除
+	function delete_fund(id)
+	{
+		var url="{/spUrl c=pwdController a=deleteTypeAc/}";
+		$.post(url,{id:id},function(res){
+			alert(res.msg);
+			if(res.success){
+				var url="{/spUrl c=pwdController a=addTypeListAc/}";
+				window.location.href=url+"&isSelect=1";
+			}
+		},'json');
+	}
+</script>
+<div class="jj_rightcont" >
+	<form action="{/spUrl c=pwdController a=addTypeListAc/}" method="post" id='paymentForm'>
+		<div class="jj_toptitle" >
+			<input type="hidden" value='0' name='type' id='type'/>
+			<input type="hidden" value='' name='id' id='id'/>
+			密码类型名称：
+			<input type='text' name='name' id='name' value='{/$name/}' style='width:200px;'/>
+			&nbsp;&nbsp;&nbsp;
+			<input  type="submit"  value="添加" class='btn_44' id='addBtn' onclick="return outFun(1);"/>&nbsp;
+			<input  type="submit"  value="查询" class='btn_44' onclick="return outFun(0);"/>&nbsp;
+		</div>
+    <table class="n_tablebox" style="width: 800px">
+        <tr class="firsttitle">
+            <td width="100">序号</td>
+            <td width="100">类型名称</td>
+            <td width="100">操作</td>
+        </tr>
+        {/foreach from=$data.data item=row name=a/}
+        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+            <td>{/$smarty.foreach.a.iteration/}</td>
+            <td>{/$row.name/}</td>
+            <td>
+            	 <a onclick="modify_fund('{/$row.id/}','{/$row.name/}');return false;" href="#" title="编辑"  class="qxModify"><img
+				src="{/$basePath/}/www/images/edit.gif" border="0" height="16"
+                width="16"></a>&nbsp;&nbsp; 
+				<a onclick="delete_fund('{/$row.id/}');return false;" href="#" title="删除" class="qxDelete"><img
+				src="{/$basePath/}/www/images/delete.png" border="0" height="16"
+				width="16"></a>
+			</td>
+        </tr>
+        {//foreach/}
+        <tr>
+        	<td colspan='4'>{/$data.linkBar/}</td>
+        </tr>
+    </table>
+    </form>
+</div>
+<script type="text/javascript">
+	function outFun(type)
+	{
+		if(type==1){
+			if(!checkNull("name","密码类型名称"))return false;
+		}
+		$type1=$("#type").val();
+		if($type1!=2){
+			$("#type").val(type);
+		}
+		$("form").submit();
+	}
+</script>
+{/include file='templates/footer.html'/}

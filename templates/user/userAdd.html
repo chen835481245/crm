@@ -1,0 +1,71 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript">
+	//确定提交
+	function submitFun()
+	{
+		var operid=$("#operid").val();
+		var name=$("#name").val();
+		if(operid==''){alert('操作员编号不能为空');$("#operid").focus();return false;}
+		if(name==''){alert('操作员名称不能为空');$("#name").focus();return false;}
+		var action='{/$action/}';
+		if(action!='douserUpdateAc'){
+			var password=$("#password").val();
+			var password1=$("#password1").val();
+			if(password==''||password1==''){alert('密码不能为空');$("#password").focus();return false;}
+			if(password.length<6){alert('登录密码不能少于6位');$("#password").focus();return false;}
+			if(password!=password1){alert('两次密码输入不一致');$("#password1").focus();return false;}
+		}
+		var postUrl="{/spUrl c=userController a={/$action/}/}";
+		ajax_submit(postUrl, 'add');
+	}	
+</script>
+	<div class="jj_rightcont" >
+    	<div class="jj_toptitle" ><strong>{/$title/}</strong></div>
+    	<form name="add">
+    		<table  class="n_tablebox" style="width: 500px">
+    		<tr>
+				<td>操作员账号：</td>
+				<td>
+					<input name="operid" type="text" class="input_text"  id="operid" value="{/$data.operid/}" {/if $action=='douserUpdateAc'/}disabled{//if/}/><span style='color:red'>用于登录</span>
+					{/if $action=='douserUpdateAc'/}<input type='hidden' value="{/$data.operid/}" name='operid'/>{//if/}
+				</td>
+   			</tr>
+            <tr>
+				<td>操作员名称：</td>
+				<td><input name="name" type="text" class="input_text"  id="name" value="{/$data.name/}"/></td>
+   			</tr>
+   			{/if $action!='douserUpdateAc'/}
+   			<tr>
+				<td>密码：</td>
+				<td><input name="password" type="password" class="input_text"  id="password" value=""  /><span style='color:red'>密码不能少于6位</span></td>
+   			</tr>
+   			<tr>
+				<td>确定密码：</td>
+				<td><input name="password1" type="password" class="input_text"  id="password1" value=""  /></td>
+   			</tr>
+   			{//if/}
+   			<tr>
+				<td>所属营业部：</td>
+				<td>
+					<select name='deptid' id='deptid' style='width:133px;'>
+						{/html_options options=$deptids selected={/$data.deptid/}/}
+					</select>
+				</td>
+   			</tr>
+   			<tr>
+				<td>角色名称：</td>
+				<td>
+					<select name='roleid' id='roleid' style='width:133px;'>
+						{/html_options options=$roleids selected={/$data.roleid/}/}
+					</select>
+				</td>
+   			</tr>
+   			</table>
+   			<table  class="n_tablebox" style="width: 500px">
+   				<tr class="firsttitle">
+   					<td><input type="button" value="确定" class='btn_44' onclick="submitFun()"></td>
+   				</tr>
+   			</table>
+    	</form>
+    </div>
+{/include file='templates/footer.html'/}

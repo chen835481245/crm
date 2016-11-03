@@ -1,0 +1,29 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript">
+	//确定提交
+	function submitFun()
+	{
+		var source=$("#source").val();
+		if(source==''){alert('客户类型不能为空');$("#source").focus();return false;}
+		var postUrl="{/spUrl c=baseController a=doAddTypeAc/}";
+		ajax_submit(postUrl, 'add');
+	}	
+</script>
+	<div class="jj_rightcont" >
+    	<div class="jj_toptitle" ><strong>{/$title/}</strong></div>
+    	<form name="add">
+    		<input type="hidden" value='{/$data.id/}' name='id'/>
+    		<table  class="n_tablebox" style="width: 500px">
+            <tr>
+				<td>客户类型：</td>
+				<td><input name="name" type="text" class="input_text"  id="name" value="{/$data.name/}"/></td>
+   			</tr>
+   			</table>
+   			<table  class="n_tablebox" style="width: 500px">
+   				<tr class="firsttitle">
+   					<td><input type="button" value="确定" class='btn_44' onclick="submitFun()"></td>
+   				</tr>
+   			</table>
+    	</form>
+    </div>
+{/include file='templates/footer.html'/}

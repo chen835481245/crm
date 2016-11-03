@@ -1,0 +1,81 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript" src="{/$basePath/}/www/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	//修改
+	function modify_fund(id)
+	{
+		var title='修改邮件客户';
+		var url="{/spUrl c=emailController a=addClientAc/}";
+		url+='&id='+id;
+		var id='addClientAc'+Math.floor(Math.random()*1000+1);
+		parent.addNewTab(id,title,url);
+		return false;
+	}
+	//删除
+	function delete_fund(id,file)
+	{
+		var url="{/spUrl c=emailController a=deleteBlackAc/}";
+		$.post(url,{id:id,file:file},function(res){
+			alert(res.msg);
+			if(res.success){
+				var url="{/spUrl c=emailController a=addBlackListAc/}";
+				window.location.href=url+"&isSelect=1";
+			}
+		},'json');
+	}
+</script>
+<div class="jj_rightcont" >
+	<form action="{/spUrl c=emailController a=addBlackListAc/}" method="post" id='paymentForm'>
+		<div class="jj_toptitle" >
+			<input type="hidden" value='1' name='isSelect' />
+			<input type="hidden" value='0' name='type' id='type'/>
+			邮件：
+			<input type='text' name='mail' id='mail' value='{/$mail/}'/>
+			&nbsp;
+			备注：
+			<input type='text' name='remark' id='remark' value='{/$remark/}'/>
+			&nbsp;&nbsp;&nbsp;
+			<input  type="submit"  value="添加" class='btn_44' onclick="return outFun(1);"/>&nbsp;
+			<input  type="submit"  value="查询" class='btn_44' onclick="return outFun(0);"/>&nbsp;
+		</div>
+    <table class="n_tablebox" style="width: 800px">
+        <tr class="firsttitle">
+            <td width="100">Email</td>
+            <td width="100">备注</td>
+            <td width="100">时间</td>
+            <td width="100">操作员</td>
+            <td width="100">操作</td>
+        </tr>
+        {/foreach from=$data.data item=row name=a/}
+        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+            <td>{/$row.mail/}</td>
+            <td>{/$row.remark/}</td>
+            <td>{/$row.datetime/}</td>
+            <td>{/$row.opername/}</td>
+            <td>
+            	<!-- <a onclick="modify_fund('{/$row.id/}');return false;" href="#" title="编辑"  class="qxModify"><img
+				src="{/$basePath/}/www/images/edit.gif" border="0" height="16"
+                width="16"></a>&nbsp;&nbsp; -->
+				<a onclick="delete_fund('{/$row.id/}');return false;" href="#" title="删除" class="qxDelete"><img
+				src="{/$basePath/}/www/images/delete.png" border="0" height="16"
+				width="16"></a>
+			</td>
+        </tr>
+        {//foreach/}
+        <tr>
+        	<td colspan='5'>{/$data.linkBar/}</td>
+        </tr>
+    </table>
+    </form>
+</div>
+<script type="text/javascript">
+	function outFun(type)
+	{
+		if(type==1){
+		if(!checkNull("mail","邮箱"))return false;
+		}
+		$("#type").val(type);
+		$("form").submit();
+	}
+</script>
+{/include file='templates/footer.html'/}

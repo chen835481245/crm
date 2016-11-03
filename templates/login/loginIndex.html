@@ -1,0 +1,97 @@
+{/include file='templates/header.html'/}
+<link href="{/$basePath/}/www/js/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="{/$basePath/}/www/js/ztree/jquery.ztree.min.js"></script>
+<link href="{/$basePath/}/www/js/tabpanel/css/core.css" rel="stylesheet" type="text/css"/>
+<link href="{/$basePath/}/www/js/tabpanel/css/TabPanel.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="{/$basePath/}/www/js/tabpanel/js/Fader.js"></script>
+<script type="text/javascript" src="{/$basePath/}/www/js/tabpanel/js/TabPanel.js"></script>
+<script type="text/javascript" src="{/$basePath/}/www/js/tabpanel/js/Math.uuid.js"></script>
+<div id="co" style="width:99.6%;height: 99.6%;background:#dcecff;padding:3px;overflow:auto;" >
+    <div id="top" style="height:29px; background:#fff; border:1px solid #7e9ec6; margin-bottom:2px;overflow: auto">
+        <div class="jj_top">欢迎使用：{/$title/}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作员： {/$user/}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;所属部门：{/$deptName/}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a onclick='loginOut()' style="cursor:pointer">退出登入</a>
+		
+        </div>
+    </div>
+    <div id="left" style="float:left;width:160px;height: 95%;border:1px solid #7e9ec6;background:#fff; ">
+        <ul id="tree" class="tree" style="width:95%;height:98.5%;overflow:auto;"></ul>
+    </div>
+    <div id="content" style="float:none;margin-left:168px;border:1px solid #7e9ec6;background:#fff;height: 95%;">
+        <div id="tab" style="width:95%;height: 98.5%;overflow: auto"></div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    var zTree;
+    var setting = {};
+    var tabpanel;
+    var toolbar;
+    var i=0;
+
+    //{/spUrl c=userController a=addUser/}
+    function addNewTab(id,title,url){
+        tabpanel.addTab({id:id,title:title, html:'<iframe src="'+url+'" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>'})
+    }
+
+    function zTreeOnClick(event, treeId, treeNode) {
+        if (treeNode.isParent == false) {
+            var jumpurl = '';
+            if (treeNode.resurl.length > 0) {
+            	arr=treeNode.resurl.split("\/");
+                jumpurl = "{/$basePath/}?c="+arr[0]+"&a="+arr[1]+"&qxRescode="+treeNode.rescode.toString();
+                jumpurl = urlAddT(jumpurl);
+                addNewTab(treeNode.rescode.toString(),treeNode.name, jumpurl);
+            }
+        }
+        return false;
+    }
+
+    $(document).ready(function(){
+        setting = {
+            isSimpleData: true,
+            treeNodeKey: "rescode",
+            treeNodeParentKey: "pId",
+            showLine: true,
+            root:{
+                isRoot:true,
+                nodes:[]
+            },
+            callback:{
+                click:zTreeOnClick
+            }
+        };
+        zTreeNodes = $.parseJSON('{/$userInfo/}');
+        zTree=$("#tree").zTree(setting,zTreeNodes);
+        zTree.expandAll(false);//true为展示全部
+        var pnodes = zTree.getNodesByParam('parentid','0');
+        for(var i=0;i < pnodes.length; i++)
+        {
+            zTree.expandNode(pnodes[i], true, false);
+        }
+        //右侧管理平台加载
+        tabpanel = new TabPanel({
+            renderTo:'tab',
+            autoResizable:true,
+            border:'none',
+            active : 0,
+            maxLength : 10,
+            items : [{
+                    id:'index-first',
+                    title:'首页',
+                    //html:'<iframe src="{/spUrl c=loginController a=firstPageAc/}" width="100%" height="100%" frameborder="0" scrolling="auto" ></iframe>',
+                    closable: false
+                }]
+        });
+    });
+
+    function loginOut()
+    {
+        if(confirm('确定退出?')){
+       		top.location.href="{/spUrl c=loginController a=loginOut/}";
+        }
+    }
+	
+			
+
+</script>
+
+{/include file="templates/footer.html"/}

@@ -1,0 +1,134 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript" src="{/$basePath/}/www/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	//修改
+	function modify_fund(id)
+	{
+		var title='修改邮件客户';
+		var url="{/spUrl c=emailController a=addClientAc/}";
+		url+='&id='+id;
+		var id='addClientAc'+Math.floor(Math.random()*1000+1);
+		parent.addNewTab(id,title,url);
+		return false;
+	}
+	//删除
+	function delete_fund(id,file)
+	{
+		var url="{/spUrl c=emailController a=deleteClientAc/}";
+		$.post(url,{id:id,file:file},function(res){
+			alert(res.msg);
+			if(res.success){
+				var url="{/spUrl c=emailController a=clientListAc/}";
+				window.location.href=url+"&isSelect=1";
+			}
+		},'json');
+	}
+</script>
+<div class="jj_rightcont" >
+	<form action="{/spUrl c=emailController a=clientListAc/}" method="post" id='form1' >
+		<div class="jj_toptitle" >
+			<input type="hidden" value='1' name='isSelect' />
+			<input type="hidden" value='0' name='out' id='out'/>
+			客户姓名：
+			<input type='text' name='first_name' id='first_name' value='{/$first_name/}' style='width:80px;'/>
+			{/if $level>2/}
+			业务员：
+			<select id='operid' name='operid' style='width:80px;'>
+				<option value=''>--全部--</option>
+				{/html_options options=$operids selected=$operid/}
+			</select>
+			{//if/}
+			邮箱：
+			<input type='text' name='mail' id='mail' value='{/$mail/}' style='width:80px;'/>
+			日期：
+			<input type='text' style='width:80px;' value='{/$begin_date/}' name='begin_date' id='begin_date' onclick='WdatePicker({dateFmt:"yyyy-MM-dd",autoUpdateOnChanged:true})'/>
+			至
+			<input type='text' style='width:80px;' value='{/$end_date/}' name='end_date' id='end_date' onclick='WdatePicker({dateFmt:"yyyy-MM-dd",autoUpdateOnChanged:true})'/>
+			&nbsp;
+			<input  type="submit"  value="查询" class='btn_44' onclick="return outFun(0);"/>&nbsp;
+			<!--<input  type="button"  value="处理" class='btn_44' onclick="toPub()"/>&nbsp;
+			--><input  type="submit"  value="导出" class='btn_44 qxQt' onclick="return outFun(1);" />
+		</div>
+		</form>
+		<form action="{/spUrl c=emailController a=addAllAc/}" method="post" id='form2' enctype="multipart/form-data">
+		<div class="jj_toptitle" >
+		    <input type="file" name='fileExcel' >
+		    		&nbsp;
+		   	<input type="submit" value='导入' onclick=""/>
+		   	&nbsp;
+		   	<a type="button" href="file/demo.xls">下载模版</a>
+	    </div>
+	 </form>
+    <table class="n_tablebox" style="width: 1100px">
+        <tr class="firsttitle">
+        	<td width="40" align="left"><input type="checkbox" id='checkboxAll'/>全选</td>
+			<td width="100">First Name</td>
+			<td width="100">Last Name</td>
+            <td width="100">Email</td>
+            <td width="100">国家</td>
+            <td width="100">最后处理时间</td>
+            <td width="100">建立时间</td>
+            <td width="200">备注</td>
+            <td width="100">处理人</td>
+            <td width="100">操作</td>
+        </tr>
+        {/foreach from=$data.data item=row name=a/}
+        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+        	<td><input type="checkbox" value='{/$row.id/}' class='checkboxclass'/></td>
+            <td>{/$row.first_name/}</td>
+            <td>{/$row.last_name/}</td>
+            <td>{/$row.mail/}</td>
+            <td>{/$row.country/}</td>
+            <td>{/$row.deal_date/}</td>
+            <td>{/$row.datetime/}</td>
+            <td>{/$row.remark/}</td>
+            <td>{/$row.opername/}</td>
+            <td>
+            	<a onclick="modify_fund('{/$row.id/}');return false;" href="#" title="编辑"  class="qxModify"><img
+				src="{/$basePath/}/www/images/edit.gif" border="0" height="16"
+                width="16"></a>&nbsp;&nbsp;
+				<a onclick="delete_fund('{/$row.id/}','{/$row.file/}');return false;" href="#" title="删除" class="qxDelete"><img
+				src="{/$basePath/}/www/images/delete.png" border="0" height="16"
+				width="16"></a>
+			</td>
+        </tr>
+        {//foreach/}
+        <tr>
+        	<td colspan='10'>{/$data.linkBar/}</td>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">
+	function toPub()
+	{
+		var idStr='';
+		$('.checkboxclass').each(function(){
+			if(this.checked){
+				idStr+=','+$(this).attr('value');
+			}		
+		});
+		idStr=idStr.substr(1);
+		if(idStr==''){
+			alert('未选中任何记录，操作无效');return false;
+		}
+		$.post("{/spUrl c=emailController a=dealAc/}",{id:idStr},function(res){
+			alert(res.msg);
+			if(res.success){
+				var url="{/spUrl c=emailController a=clientListAc/}";
+				window.location.href=url+"&isSelect=1";
+			}
+		},'json');
+	}
+	function outFun(type)
+	{
+		$("#out").val(type);
+		$("#form1").submit();
+	}
+	$(function(){
+		$("#checkboxAll").click(function(){
+			var checkFlag=this.checked;
+			$(".checkboxclass").attr("checked",checkFlag);
+		});
+	});
+</script>
+{/include file='templates/footer.html'/}

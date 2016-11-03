@@ -1,0 +1,29 @@
+{/include file='header.html'/}
+<script type="text/javascript">
+</script>
+<div class="jj_rightcont" >
+	<form action="{/spUrl c=manageController a=getChannelListAc/}" method="post">
+	<div class="jj_toptitle" ><b>日常呈现</b>&nbsp;&nbsp;&nbsp;&nbsp;</div>
+	</form>
+    <table class="n_tablebox" style="width: 1000px">
+        <tr class="firsttitle">
+			<td width="100">有效城市</td>
+            <td width="100">有效商家</td>
+            <td width="100">用户数</td>
+            <td width="100">累计领取数</td>
+            <td width="100">累计消费数</td>
+            <td width="100">累计消费金额</td>
+        </tr>
+        {/if $data/}
+	        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+				<td>{/$data['0']/} 个</td>
+	            <td>{/$data['1']/} 家</td>
+	            <td>{/$data['2']/} 个</td>
+	            <td>{/$data['3']/} 张</td>
+	            <td>{/$data['4']/} 张</td>
+	            <td>{/$data['5']/} 元</td>
+	        </tr>
+        {//if/}	
+    </table>
+</div>
+{/include file='footer.html'/}

@@ -1,0 +1,63 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript">
+	//确定提交
+	function submitFun()
+	{
+		var password=$("#password").val();
+		var newpassword=$("#newpassword").val();
+		var password1=$("#password1").val();
+		if(password==''||password1==''||newpassword==''){alert('所有密码不能为空');$("#password").focus();return false;}
+		if(newpassword.length<6){alert('密码不能少于6位');$("#newpassword").focus();return false;}
+		if(newpassword!=password1){alert('两次密码输入不一致');$("#newpassword").focus();return false;}
+		var postUrl="{/spUrl c=userController a={/$action/}/}";
+		ajax_submit(postUrl, 'add');
+	}	
+</script>
+	<div class="jj_rightcont" >
+    	<div class="jj_toptitle" ><strong>{/$title/}</strong></div>
+    	<form name="add">
+    		<table  class="n_tablebox" style="width: 500px">
+    		<tr>
+				<td>操作员编号：</td>
+				<td>
+					<input name="operid" type="text" class="input_text"  id="operid" value="{/$data.operid/}" disabled/>
+					<input type='hidden' value="{/$data.operid/}" name='operid'/>
+				</td>
+   			</tr>
+            <tr>
+				<td>操作员名称：</td>
+				<td><input name="name" type="text" class="input_text"  id="name" value="{/$data.name/}" disabled/></td>
+   			</tr>
+   			<tr>
+				<td>所属营业部：</td>
+				<td>
+					<select name='deptid' id='deptid' style='width:133px;' disabled>
+						{/html_options options=$deptids selected={/$data.deptid/}/}
+					</select>
+				</td>
+   			</tr>
+   			<tr>
+				<td>角色名称：</td>
+				<td>
+					<select name='roleid' id='roleid' style='width:133px;' disabled>
+						{/html_options options=$roleids selected={/$data.roleid/}/}
+					</select>
+				</td>
+   			</tr>
+   			<tr>
+				<td>新密码：</td>
+				<td><input name="newpassword" type="password" class="input_text"  id="newpassword" value=""  /><span style='color:red'>密码不能少于6位</span></td>
+   			</tr>
+   			<tr>
+				<td>确定密码：</td>
+				<td><input name="password1" type="password" class="input_text"  id="password1" value=""  /></td>
+   			</tr>
+   			</table>
+   			<table  class="n_tablebox" style="width: 500px">
+   				<tr class="firsttitle">
+   					<td><input type="button" value="确定" class='btn_44' onclick="submitFun()"></td>
+   				</tr>
+   			</table>
+    	</form>
+    </div>
+{/include file='templates/footer.html'/}

@@ -1,0 +1,109 @@
+{/include file='templates/header.html'/}
+<script type='text/javascript' src='{/$basePath/}/www/js/jquery-autocomplete/jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="{/$basePath/}/www/js/jquery-autocomplete/jquery.autocomplete.css" />
+<script type="text/javascript" src="{/$basePath/}/www/js/My97DatePicker/WdatePicker.js"></script>
+
+
+<script type="text/javascript">
+$(function(){
+	var clientsJson=$("#clientsJson").val();
+	suppliersAuto($.parseJSON(clientsJson));
+	var id='{/$data.id/}';
+	var client_id='{/$data.client_id/}';
+	if(id){
+		showData(id);
+	}
+	if(client_id){
+		showData(client_id);
+	}
+});
+	//确定提交
+	function submitFun()
+	{
+		var mould_type=$("#mould_type").val();
+		if(mould_type==''){alert('模具类型不能为空');$("#mould_type").focus();return false;}
+		$("#mouldForm").submit();
+	}	
+	function suppliersAuto(dataJsonObj){
+		function format(msg) {
+			return  msg.id+' '+msg.name+' '+msg.mail+' '+msg.company_name;
+		}
+		$("#autoid").unautocomplete();
+		$("#autoid").autocomplete(dataJsonObj, {
+			max:20,//列表里的条目数
+			minChars:0, //自动完成激活之前填入的最小字符
+			width : 200, //提示的宽度，溢出隐藏
+			multiple:false,
+			scrollHeight : 100, //提示的高度，溢出显示滚动条
+			matchContains : true, //包含匹配，就是data参数里的数据，是否只要包含文本框里的数据就显示
+			autoFill : false, //自动填充
+			cacheLength : 1, //缓存
+			dataType: "json",
+			formatItem: function(item) {
+				return format(item);
+			},
+			formatMatch : function(row, i, max) {
+					return row.id+' '+row.name+' '+row.mail+' '+row.company_name;
+					}
+		}).result(function(e, item) {
+			var id=item.id;
+			$("#client_id").val(id);
+			showData(id);
+		});
+	}
+	function showData(id)
+	{
+		$.post("{/spUrl c=recordController a=getClientInfoAc/}",{id:id},function(res){
+			$(".etd").empty();
+			$("#client_name").append(res.first_name+' '+res.last_name);
+			$("#client_type").append(res.client_type);
+			$("#client_country").append(res.country);
+		},'json');
+	}
+</script>
+	<div class="jj_rightcont" >
+    	<div class="jj_toptitle" ><strong>{/$title/}</strong></div>
+    	<form name="add" action="{/spUrl c=recordController a=doAddMarketAc/}" method="post" id='mouldForm'>
+    		<input type="hidden" value='{/$data.id/}' name='id'/>
+    		<input type="hidden" value='{/$clientsJson/}' id='clientsJson'/>
+    		<table  class="n_tablebox" style="width: 900px">
+            <tr>
+				<td style='width:200px;'><font color="#FF0000">*</font>客户名称：
+					(支持姓、邮箱和客户公司的检索)：</td>
+				<td>
+					<input type='text' name='autoid' id='autoid' style='width:200px;' class='autoid' value='{/$data.clientInfo/}'/> 
+					<input type='hidden' name='client_id' id='client_id'  value='{/$data.client_id/}'/>	
+				</td>
+				<td style='width:200px;'>客户名称：</td>
+				<td id='client_name' class='etd'></td>
+   			</tr>
+   			<tr>
+   				<td >客户类型：</td>
+				<td id='client_type' class='etd'></td>
+				<td >客户国家：</td>
+				<td id='client_country' class='etd'></td>
+   			</tr>
+   			<tr>
+   				<td><font color="#FF0000">*</font>日期：<font color="red">不可修改</font></td>
+				<td><input type='text'  value='{/$data.datetime/}' name='datetime' id='datetime' disabled="disabled"/></td>
+				<td>关键词：</td>
+				<td>
+					<input name="keywords" type="text"   id="keywords" value="{/$data.keywords/}"/>
+				</td>
+   			</tr>
+   			
+   			<tr>
+   				<td>营销动态：</td>
+				<td colspan='3'>
+					<textarea name="content" cols="85" rows="5"  id="content" style='width:90%'>{/$data.content/}</textarea>
+				</td>
+   			</tr>
+   			</table>
+   			<table  class="n_tablebox" style="width: 900px">
+   				<tr class="firsttitle">
+   					<td><input type="button" value="确定" class='btn_44' onclick="submitFun()"></td>
+   				</tr>
+   			</table>
+    	</form>
+    </div>
+{/include file='templates/footer.html'/}

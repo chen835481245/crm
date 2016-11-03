@@ -1,0 +1,52 @@
+{/include file='header.html'/}
+<form action="{/spUrl c=statController a=getDataStatAc/}" method="post" name='form' id='form'>
+<input type="hidden" value='1' id='selectType' name='selectType'/>
+<div class="jj_rightcont" >
+	<div class="jj_toptitle" ><b>数据汇总</b>
+    	日期：
+    	<select name='year'>
+    		{/html_options options=$years selected=$year/}
+    	</select>
+    	年
+    	<select name='month'>
+    		<option value='-1'>--全部--</option>
+    		{/html_options options=$months selected=$month/}
+    	</select>
+    	月
+		&nbsp;&nbsp;
+        <input type="submit" name="" class="btn_44"  value="查找" onclick="return selectFun(1)">
+        &nbsp;
+        <input type="submit" name="" class="btn_44"  value="今日" onclick="return selectFun(2)">
+        &nbsp;
+        <input type="submit" name="" class="btn_44"  value="本周" onclick="return selectFun(3)">
+	</div>
+    <table class="n_tablebox" style="width: 1000px">
+        <tr class="firsttitle">
+            <td width="100">业务员名称</td>
+            <td width="100">新增客户数量</td>
+            <td width="100">日常动态汇总</td>
+            <td width="100">营销汇总</td>
+            <td width="100">联系人汇总</td>
+        </tr>
+        {/if $data/}
+	        {/foreach from=$data item=row name=a key=key/}
+	        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+	        	<td>{/$row.opername/}</td>
+	        	<td>{/$row.clientNum/}</td>
+	        	<td>{/$row.dynamicNum/}</td>
+	        	<td>{/$row.marketNum/}</td>
+	        	<td>{/$row.emailNum/}</td>
+	        </tr>
+	        {//foreach/}
+        {//if/}	
+    </table>
+</div>
+</form>
+<script type="text/javascript">
+	function selectFun(type)
+	{
+		var selectType=$("#selectType").val(type);
+		return true;
+	}
+</script>
+{/include file='footer.html'/}

@@ -1,0 +1,68 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript">
+	function add_fund()
+	{
+		var url="{/spUrl c=baseController a=addTypeAc/}";
+		openModelDialog(url,550,400);
+	}
+	//修改
+	function modify_fund(id)
+	{
+		var url="{/spUrl c=baseController a=addTypeAc/}";
+		url+='&id='+id;
+		openModelDialog(url,550,400);
+	}
+	//删除
+	function delete_fund(id)
+	{
+		var url="{/spUrl c=baseController a=deleteTypeAc/}";
+		var param="&id="+id;
+		if(confirm('确定删除客户类型?')){
+			commonAjax(url,param,delBack);
+		}
+	}
+	function delBack(res)
+	{
+		if(res){
+			alert(res.msg);
+			window.location.href=window.location.href;
+			window.location.reload();
+		}
+	}
+	
+</script>
+<div class="jj_rightcont" >
+	<form action="{/spUrl c=baseController a=typeListAc/}" method="post" id='couponForm'>
+		<div class="jj_toptitle" ><b>客户类型管理</b>&nbsp;&nbsp;&nbsp;&nbsp;
+			<input name="button" type="submit"  value="刷新" class='btn_44'/>
+			&nbsp;&nbsp;
+	    	<input name="button" type="button" onclick="add_fund();" value="新增" class='btn_44 qxAdd'/>
+		</div>
+	</form>
+    <table class="n_tablebox" style="width: 600px">
+        <tr class="firsttitle">
+        	<td width="100">序号</td>
+			<td width="100">客户类型</td>
+            <td width="50">操作</td>
+        </tr>
+        {/foreach from=$data.data item=row name=a/}
+        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+        	<td>{/$smarty.foreach.a.iteration/}</td>
+            <td>{/$row.name/}</td>
+            <td><a onclick="modify_fund('{/$row.id/}');return false;" href="#" title="编辑"  class="qxModify"><img
+				src="{/$basePath/}/www/images/edit.gif" border="0" height="16"
+                width="16"></a>&nbsp;&nbsp;
+				<a onclick="delete_fund('{/$row.id/}');return false;" href="#" title="删除" class="qxDelete"><img
+				src="{/$basePath/}/www/images/delete.png" border="0" height="16"
+				width="16"></a>
+			</td>
+        </tr>
+        {//foreach/}
+        <tr>
+        	<td colspan='3'>{/$data.linkBar/}</td>
+        </tr>
+    </table>
+</div>
+
+
+{/include file='templates/footer.html'/}

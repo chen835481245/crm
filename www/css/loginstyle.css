@@ -1,0 +1,15 @@
+*					{ margin: 0; padding: 0; }
+body				{ font-family: "ËÎÌו"; background: #c4c4c4; color: #3a3a3a;  }
+
+.clear				{ clear: both; }
+
+.inputs				{ width: 150px; display: block; padding: 4px; margin: 0 0 10px 0; font-size: 18px;}
+
+table				{ background: url('../images/login-page-bg.png') no-repeat;}
+
+.submit_td			{padding-left:150px;text-align:center;}
+
+.submit				{width:60px;height:30px;background: url(../images/button-bg.png) repeat-x top center; border: 1px solid #999;
+					  -moz-border-radius: 5px; padding: 5px; color: black; font-weight: bold;
+					  -webkit-border-radius: 5px; font-size: 13px;  width: 70px;}
+.submit:hover		{ background: white; color: black; }

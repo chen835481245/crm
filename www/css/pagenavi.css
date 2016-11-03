@@ -1,0 +1,16 @@
+/* CSS Document */
+.pager_nav {text-align:right;}
+.pages {margin:10px 0;font-size: 12px;padding:3px 3px 3px 3px;text-align: right; color:#666}
+
+.pages a {border: #6699cc 1px solid;padding:2px 8px 2px 8px;margin: 2px;color: #669acc; text-decoration: none;white-space:nowrap;}
+.pages a:hover {border: #669acc 1px solid; padding:2px 8px 2px 8px;background-color: #d7ebff;margin: 2px; color: #669acc;text-decoration: none}
+.pages a:active { border-right: #669acc 1px solid; border-top: #669acc 1px solid; border-left: #669acc 1px solid;color: #000; border-bottom: #669acc 1px solid}
+.pages span {border: #ccc 1px solid;padding:2px 8px 2px 8px;margin: 2px;color: #ccc; text-decoration: none;white-space:nowrap;}
+.pages strong {border: #669acc 1px solid;padding:2px 8px 2px 8px; font-weight: bold; margin: 2px; color: #fff;background-color: #669acc;white-space:nowrap;}
+.pages .prev {padding-right: 12px; padding-left: 12px;}
+.pages .prev:hover {padding-right: 12px; padding-left: 12px;}
+.pages .next {padding-right: 12px; padding-left: 12px;white-space:nowrap;}
+.pages .next:hover {padding-right: 12px; padding-left: 12px;}
+.pages em{font-style:normal;font-weight:bold;}
+kbd {margin-bottom:2px;height:15px;}
+.pages input{vertical-align:middle;padding-buttom:2px;}

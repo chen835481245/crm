@@ -1,0 +1,206 @@
+{/include file='header.html'/}
+<link href="{/$basePath/}/www/js/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="{/$basePath/}/www/js/ztree/jquery.ztree.min.js"></script>
+<div class="jj_rightcont">
+    <form name="role" id='roleForm'>
+        <input type="hidden" style="width: 300px;" id="state" name="state" value="1">
+        <table class="n_tablebox" width="800">
+            <tr class="firsttitle">
+                <td colspan="2">
+                    {/$title/}
+                </td>
+            </tr>
+            <tr>
+                <td width="80" class="txt_right">角色名:</td>
+                <td width="450" class="txt_left">
+                	<input type="hidden" id="roleid" name="roleid" value="{/$roleid/}">{/$name/}
+                	&nbsp;&nbsp;&nbsp;&nbsp;
+                	<input type="checkbox" id='checkAll'>选择所有权限
+                </td>
+            </tr>
+            <tr>
+                <td class="txt_right">资源树:</td>
+                <td valign="top"><ul id="tree" class="tree" style="width:96%;height:99%;overflow:auto;"></ul></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="txt_center">
+                    <input type="button" value="保存" onclick="dosubmit();" class="btn_70">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{/include file='footer.html'/}
+<script language="javascript">
+	var parentParams = window.dialogArguments;
+    var IDMark_Switch = "_switch";
+    var IDMark_Icon = "_ico";
+    var IDMark_Span = "_span";
+    var IDMark_Input = "_input";
+    var IDMark_Check = "_check";
+    var IDMark_Edit = "_edit";
+    var IDMark_Remove = "_remove";
+    var IDMark_Ul = "_ul";
+    var IDMark_A = "_a";
+    var url = "{/$url/}";
+    var resourceAddUrl = "{/spUrl c='userController' a='sourceAddAc'/}";
+    var resourceModifyUrl = "{/spUrl c='userController' a='sourceModifyAc'/}";
+    var resourceDeleteUrl = "{/spUrl c='userController' a='sourceDeleteAc'/}";
+    function search_invoice()
+    {
+        var customerClass = $('#customerClass').val();
+        var saler_seq = $('#saler_seq').val();
+        var cs_seq = $('#cs_seq').val();
+        var cs_name = $('#cs_name').val();
+        var invoice_code=$('#invoice_code').val();
+        var jumpurl = url+'?customerClass='+customerClass+'&saler_seq='+saler_seq+'&cs_seq='+cs_seq+'&cs_name='+cs_name+'&invoice_code='+invoice_code;
+        window.location.href = jumpurl;
+    }
+    function selectAll()
+    {
+        var user_all = $('#user_all').is(':checked');
+        $("input[name^=user]").attr("checked", user_all);
+    }
+
+    function addResource(id)
+    {
+        var resourceAddUrl2 = resourceAddUrl+'&rs_code='+id;
+        openModelDialog(resourceAddUrl2,650,450);
+    }
+    function modifyResource(id)
+    {
+        var resourceModifyUrl2 = resourceModifyUrl+'&rs_code='+id;
+        openModelDialog(resourceModifyUrl2,650,450);
+    }
+    function deleteResource(id)
+    {
+		if(confirm('确定删除该资源吗？')){
+			var url='{/spUrl c=userController a=sourceDelAc/}';
+			param="rescode="+id;
+			commonAjax(url,param,deleteResourceBack);
+		}        
+    }
+    function deleteResourceBack(res)
+    {
+        alert(res.msg);
+        if(res.success){
+			location.reload();
+        }
+    }
+    function addHoverDom(treeId, treeNode) {
+        var aObj = $("#" + treeNode.tId + IDMark_A);
+        if ($("#diyBtn1_"+treeNode.id).length>0) return;
+        if ($("#diyBtn2_"+treeNode.id).length>0) return;
+        if ($("#diyBtn3_"+treeNode.id).length>0) return;
+        var editStr = '';
+        var type = '';
+        if (treeNode.rs_class == 1) {
+            type = '树';
+        }
+        else if (treeNode.rs_class == 2) {
+            type = '功能';
+        }
+        var ck_checked='';
+        var xz_checked='';
+        var xg_checked='';
+        var sc_checked='';
+        var dc_checked='';
+        var qt_checked='';
+        (treeNode.permission.substr(0,1) == 1) ?ck_checked="checked='checked'" :ck_checked="";
+        (treeNode.permission.substr(1,1) == 1) ?xz_checked="checked='checked'" :xz_checked="";
+        (treeNode.permission.substr(2,1) == 1) ?xg_checked="checked='checked'" :xg_checked="";
+        (treeNode.permission.substr(3,1) == 1) ?sc_checked="checked='checked'" :sc_checked="";
+        (treeNode.permission.substr(4,1) == 1) ?dc_checked="checked='checked'" :dc_checked="";
+        (treeNode.permission.substr(5,1) == 1) ?qt_checked="checked='checked'" :qt_checked="";
+		editStr +="<span id='diyBtn1_" +treeNode.id+ "'><input type='checkbox' class='qxcheck qx_"+treeNode.id+"' value='ck_"+treeNode.id+"' "+ck_checked+">查看&nbsp;&nbsp;&nbsp;&nbsp;</span>";
+		editStr +="<span id='diyBtn2_" +treeNode.id+ "'><input type='checkbox' class='qxcheck qx_"+treeNode.id+"' value='xz_"+treeNode.id+"' "+xz_checked+">新增&nbsp;&nbsp;&nbsp;&nbsp;</span>";
+		editStr +="<span id='diyBtn3_" +treeNode.id+ "'><input type='checkbox' class='qxcheck qx_"+treeNode.id+"' value='xg_"+treeNode.id+"' "+xg_checked+">修改&nbsp;&nbsp;&nbsp;&nbsp;</span>";
+		editStr +="<span id='diyBtn4_" +treeNode.id+ "'><input type='checkbox' class='qxcheck qx_"+treeNode.id+"' value='sc_"+treeNode.id+"' "+sc_checked+">删除&nbsp;&nbsp;&nbsp;&nbsp;</span>";
+		editStr +="<span id='diyBtn5_" +treeNode.id+ "'><input type='checkbox' class='qxcheck qx_"+treeNode.id+"' value='dc_"+treeNode.id+"' "+dc_checked+">导出&nbsp;&nbsp;&nbsp;&nbsp;</span>";
+		editStr +="<span id='diyBtn6_" +treeNode.id+ "'><input type='checkbox' class='qxcheck qx_"+treeNode.id+"' value='qt_"+treeNode.id+"' "+qt_checked+">其他&nbsp;&nbsp;&nbsp;&nbsp;</span>";
+		editStr +="<span id='diyBtn7_" +treeNode.id+ "'><input type='checkbox' id='qx_" +treeNode.id+ "' onclick='checkLineAll("+treeNode.id+",this)'>全选&nbsp;&nbsp;&nbsp;&nbsp;</span>";
+        aObj.after(editStr);
+    }
+    
+	function checkLineAll(treeNodeId,obj)
+	{
+		var checked=obj.checked;
+		$(".qx_"+treeNodeId).attr("checked",checked);
+	}
+
+    function removeHoverDom(treeId, treeNode) {
+        $("#text_"+treeNode.id).remove();
+        $("#diyBtn1_"+treeNode.id).unbind().remove();
+        $("#diyBtn2_"+treeNode.id).unbind().remove();
+        $("#diyBtn3_"+treeNode.id).unbind().remove();
+        $("#diyBtn4_"+treeNode.id).unbind().remove();
+        $("#diyBtn5_"+treeNode.id).unbind().remove();
+    }
+    var zTree;
+    var setting = {
+        //addHoverDom: addHoverDom,
+        //removeHoverDom: removeHoverDom,
+        addDiyDom:addHoverDom,
+        isSimpleData: true,
+        treeNodeKey: "rescode",
+        treeNodeParentKey: "pId",
+        showLine: true,
+        root:{
+            isRoot:true,
+            nodes:[]
+        }
+    };
+
+    var zTreeNodes = '';
+    $(document).ready(function(){
+        var treedata = $.parseJSON('{/$treedata/}');
+
+        zTreeNodes = treedata;
+        zTree=$("#tree").zTree(setting,zTreeNodes);
+        zTree.expandAll(true);
+    });
+
+
+    $(function(){
+		$("#checkAll").click(function(){
+			$(".qxcheck").attr('checked',this.checked);	
+		});
+    });
+    
+    function dosubmit()
+    {
+        var permission='';
+		$(".qxcheck").each(function(){
+			if(this.checked){
+				permission+="|"+$(this).attr("value");
+			}		
+		});
+		if(permission==''){alert('您未选择任何资源');return false;}else{permission=permission.substr(1,permission.length);}
+		var postUrl = "{/spUrl c=userController a=doManageRoleresAc/}";
+		var roleid = $('#roleid').val();
+        var submitUrl = postUrl+'&roleid='+roleid+'&permission='+permission;
+        $.ajax({
+            type: "POST",
+            url: submitUrl,
+            dataType : "json",
+            success: function(result){
+                alert(result.msg);
+                if (result.success == true) {
+                	parentParams.location.href=parentParams.location;
+                    window.close();
+                }
+            },
+            complete:function(req,text){
+                if(text!='success'){
+                    alert(text+" "+req.responseText);
+                }
+            }
+        });
+    }
+    
+
+
+
+    
+    
+</script>

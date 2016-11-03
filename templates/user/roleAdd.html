@@ -1,0 +1,48 @@
+{/include file='header.html'/}
+<script type="text/javascript">
+	//确定提交
+	function submitFun()
+	{
+		var name=$("#name").val();
+		if(name==''){alert('角色名称不能为空');$("#name").focus();return false;}
+		var postUrl="{/spUrl c=userController a={/$action/}/}";
+		ajax_submit(postUrl, 'add');
+	}	
+</script>
+	<div class="jj_rightcont" >
+    	<div class="jj_toptitle" ><strong>{/$title/}</strong></div>
+    	<form name="add">
+    		<input name="roleid" type="hidden" class="input_text"  id="roleid" value="{/$data.roleid/}"/>
+    		<table  class="n_tablebox" style="width: 500px">
+    		<tr>
+				<td>角色名称：</td>
+				<td>
+					<input name="name" type="text" class="input_text"  id="name" value="{/$data.role_name/}"/>
+				</td>
+   			</tr>
+   			<tr>
+				<td>角色等级：</td>
+				<td>
+					<select name='level' id='level' style='width:128px;'>
+						<option value='1' >一级</option>
+						<option value='2' {/if $data.level=='2'/}selected{//if/}>二级</option>
+						<option value='3' {/if $data.level=='3'/}selected{//if/}>三级</option>
+						<option value='4' {/if $data.level=='4'/}selected{//if/}>四级</option>
+					</select>
+				</td>
+   			</tr>
+   			<tr>
+				<td>备注：</td>
+				<td>
+					<input name="remark" type="text" class="input_text"  id="remark" value="{/$data.remark/}" size=70 maxlength="100"/>
+				</td>
+   			</tr>
+   			</table>
+   			<table  class="n_tablebox" style="width: 500px">
+   				<tr class="firsttitle">
+   					<td><input type="button" value="确定" class='btn_44' onclick="submitFun()"></td>
+   				</tr>
+   			</table>
+    	</form>
+    </div>
+{/include file='footer.html'/}

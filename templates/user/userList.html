@@ -1,0 +1,79 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript">
+	function add_fund()
+	{
+		var url="{/spUrl c=userController a=userAddAc/}";
+		url+='&actionType=a';
+		openModelDialog(url,550,400);
+	}
+	//修改
+	function modify_fund(operid)
+	{
+		var url="{/spUrl c=userController a=userUpdateAc/}";
+		url+='&actionType=u&operid='+encodeURIComponent(operid);
+		openModelDialog(url,550,400);
+	}
+	//修改密码
+	function delete_pwd(operid)
+	{
+		var url="{/spUrl c=userController a=userUpdateAc/}";
+		url+='&operid='+operid;
+		openModelDialog(url,550,400);
+	}
+	//删除
+	function delete_fund(operid)
+	{
+		var url="{/spUrl c=userController a=douserDeleteAc/}";
+		var param="operid="+operid;
+		if(confirm('确定删除此操作员?')){
+			commonAjax(url,param,delBack);
+		}
+	}
+	function delBack(res)
+	{
+		if(res){
+			alert(res.msg);
+			location.reload();
+		}
+	}
+	
+</script>
+<div class="jj_rightcont" >
+	<div class="jj_toptitle" ><b>操作员列表</b>&nbsp;&nbsp;&nbsp;&nbsp;
+    <input name="button" type="button" onclick="add_fund();" value="新增" class='btn_44 qxAdd'/>
+	</div>
+    <table class="n_tablebox" style="width: 800px">
+        <tr class="firsttitle">
+			<td width="100">操作员编号</td>
+            <td width="100">操作员名称</td>
+            <td width="100">所属部门</td>
+            <td width='100'>角色名称</td>
+            <td width="50">操作</td>
+        </tr>
+        {/if $data/}
+	        {/foreach from=$data.data item=row name=a/}
+	        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+				<td>{/$row.operid/}</td>
+	            <td>{/$row.name/}</td>
+	            <td>{/$row.dept_name/}</td>
+	            <td>{/$row.role_name/}</td>
+	            <td><a onclick="modify_fund('{/$row.operid/}');return false;" href="#" title="编辑" class="qxModify"><img
+					src="{/$basePath/}/www/images/edit.gif" border="0" height="16"
+	                width="16"></a>&nbsp;&nbsp;
+					<a onclick="delete_fund('{/$row.operid/}');return false;" href="#" title="删除" class="qxDelete"><img
+					src="{/$basePath/}/www/images/delete.png" border="0" height="16"
+					width="16"></a>
+					&nbsp;&nbsp;
+					<input name="button" type="button" onclick="delete_pwd('{/$row.operid/}');" value="修改密码" class='btn_73 qxQt'/>
+				</td>
+	        </tr>
+	        {//foreach/}
+	        <tr>
+	        	<td colspan='10'>{/$data.linkBar/}</td>
+	        </tr>
+        {//if/}	
+    </table>
+</div>
+
+
+{/include file='templates/footer.html'/}

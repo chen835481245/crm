@@ -1,0 +1,115 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript" src="{/$basePath/}/www/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	//修改
+	function modify_fund(id)
+	{
+		var title='修改我的密码';
+		var url="{/spUrl c=pwdController a=addPwdAc/}";
+		url+='&id='+id;
+		var id='addPwdAc'+Math.floor(Math.random()*1000+1);
+		parent.addNewTab(id,title,url);
+		return false;
+	}
+	//删除
+	function delete_fund(id)
+	{
+		var url="{/spUrl c=pwdController a=deletePwdAc/}";
+		$.post(url,{id:id},function(res){
+			alert(res.msg);
+			if(res.success){
+				var url="{/spUrl c=pwdController a=pwdListAc/}";
+				window.location.href=url+"&isSelect=1";
+			}
+		},'json');
+	}
+</script>
+<div class="jj_rightcont" >
+	<form action="{/spUrl c=pwdController a=pwdListAc/}" method="post" id='paymentForm'>
+		<div class="jj_toptitle" >
+			<input type="hidden" value='1' name='isSelect' />
+			<input type="hidden" value='0' name='out' id='out'/>
+			搜索：
+			<input type='text' name='search' id='search' value='{/$search/}'/>
+			&nbsp;&nbsp;
+			<input  type="submit"  value="查询" class='btn_44' onclick="return outFun(0);"/>
+		</div>
+    <table class="n_tablebox" style="width: 1050px">
+        <tr class="firsttitle">
+			<td width="200">密码类型</td>
+			<td width="100">登陆后台地址</td>
+            <td width="100">用户名</td>
+            <td width="100">用户密码</td>
+            <td width="100">备注</td>
+            <td width="100">创建人</td>
+            <td width="100">权限人员列表</td>
+            <td width="100">更新时间</td>
+            <td width="100">操作</td>
+        </tr>
+        {/foreach from=$data.data item=row name=a/}
+        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+            <td>{/$row.type_name/}</td>
+            <td><a onclick="window.open('{/$row.admin_url/}')" style='cursor:pointer'>点击跳转</a></td>
+            <td>{/$row.username/}</td>
+            <td>{/$row.pwd/}</td>
+            <td>{/$row.remark/}</td>
+            <td>{/$row.opername/}</td>
+            <td>
+            	<select>
+            		{/foreach from=$data['ownArr'][$row.id] item=row1 /}
+            		<option>{/$row1.name/}</option>
+            		{//foreach/}
+            	</select>
+            	
+            </td>
+             <td>{/$row.datetime/}</td>
+            <td>
+            	<a onclick="modify_fund('{/$row.id/}');return false;" href="#" title="编辑"  class="qxModify"><img
+				src="{/$basePath/}/www/images/edit.gif" border="0" height="16"
+                width="16"></a>&nbsp;&nbsp;
+				<a onclick="delete_fund('{/$row.id/}');return false;" href="#" title="删除" class="qxDelete"><img
+				src="{/$basePath/}/www/images/delete.png" border="0" height="16"
+				width="16"></a>
+			</td>
+        </tr>
+        {//foreach/}
+        <tr>
+        	<td colspan='9'>{/$data.linkBar/}</td>
+        </tr>
+    </table>
+    </form>
+</div>
+<script type="text/javascript">
+	function toPub()
+	{
+		var idStr='';
+		$('.checkboxclass').each(function(){
+			if(this.checked){
+				idStr+=','+$(this).attr('value');
+			}		
+		});
+		idStr=idStr.substr(1);
+		if(idStr==''){
+			alert('未选中任何记录，操作无效');return false;
+		}
+		$.post("{/spUrl c=pwdController a=dealAc/}",{id:idStr},function(res){
+			alert(res.msg);
+			if(res.success){
+				var url="{/spUrl c=pwdController a=clientListAc/}";
+				window.location.href=url+"&isSelect=1";
+			}
+		},'json');
+	}
+	function outFun(type)
+	{
+		$("#out").val(type);
+		$("form").submit();
+	}
+	$(function(){
+		$("#checkboxAll").click(function(){
+			var checkFlag=this.checked;
+			$(".checkboxclass").attr("checked",checkFlag);
+		});
+	});
+</script>
+{/include file='templates/footer.html'/}

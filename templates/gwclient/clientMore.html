@@ -1,0 +1,48 @@
+{/include file='templates/header.html'/}
+	<div class="jj_rightcont" >
+    	<div class="jj_toptitle" ><strong>{/$title/}</strong></div>
+    		<input type="hidden" value='{/$data.id/}' name='id'/>
+    		<table  class="n_tablebox" style="width: 800px">
+	            <tr>
+					<td style='width:90px;'>客户持有者：</td>
+					<td style='width:150px;'>
+						{/$data.opername/}
+					</td>
+					<td style='width:100px;'>客户类型：</td>
+					<td style='width:300px;'>
+						{/$data.type_name/}
+					</td>
+	   			</tr>
+	   			<tr>
+					<td>客户名称：</td>
+					<td>{/$data.first_name/} {/$data.last_name/}</td>
+					<td>客户电话：</td>
+					<td>{/$data.phone/}</td>
+	   			</tr>
+	   			<tr>
+					<td>公司名称：</td>
+					<td>{/$data.company_name/}</td>
+					<td>客户邮箱：</td>
+					<td>{/$data.mail/}</td>
+	   			</tr>
+	   			<tr>
+					<td>客户手机：</td>
+					<td>{/$data.mobile_phone/}</td>
+					<td>客户在线工具：</td>
+					<td>{/$data.tool_number/}</td>
+	   			</tr>
+	   			<tr>
+	   				<td>国家：</td>
+					<td >{/$data.country/}</td>
+					<td>客户公司网址：</td>
+					<td >{/$data.url/}</td>
+	   			</tr>
+	   			<tr>
+					<td>备注：</td>
+					<td colspan="3">
+						{/$data.remark/}
+					</td>
+	   			</tr>
+   			</table>
+    </div>
+{/include file='templates/footer.html'/}

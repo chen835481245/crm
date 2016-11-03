@@ -1,0 +1,153 @@
+{/include file="header.html"/}
+<script type="text/javascript" src="{/$_basePath/}/js/My97DatePicker/WdatePicker.js"></script>
+
+<div class="jj_rightcont">
+    <form name="resource">
+        <input type="hidden" style="width: 300px;" id="state" name="state" value="1">
+        <input type="hidden" id="rs_code" name="rs_code" value="{/$rs.RS_CODE/}">
+        <table class="n_tablebox" width="600">
+            <tr class="firsttitle">
+                <td colspan="2">
+                    {/$title/}
+                </td>
+            </tr>
+            <tr>
+                <td width="150" class="txt_right">资源名:</td>
+                <td width="450" class="txt_left"><input type="text" style="width: 300px;" id="rs_name" name="rs_name" value="{/$rs.RS_NAME/}"><font color="red">*</font></td>
+            </tr>
+            <tr>
+                <td width="150" class="txt_right">是否有效:</td>
+                <td width="450" class="txt_left">
+                    <select id="isvalid" name="isvalid">
+                        <option value="1" {/if $rs.ISVALID == 1/}selected{//if/}>有效</option>
+                        <option value="0" {/if $rs.ISVALID == 0/}selected{//if/}>无效</option>
+                    </select>
+                    <font color="red">*</font></td>
+            </tr>
+            <tr>
+                <td width="150" class="txt_right">资源级别:</td>
+                <td width="450" class="txt_left">
+                    <select id="rs_type" name="rs_type">
+                        <option value=""></option>
+                        {/html_options options=$rs_type selected=$rs.RS_TYPE/}
+                    </select>
+                    <font color="red">*</font></td>
+            </tr>
+            <tr>
+                <td  class="txt_right">是否权限控制:</td>
+                <td  class="txt_left">
+                    <select id="rs_ischeck" name="rs_ischeck">
+                        <option value=""></option>
+                        {/html_options options=$rs_ischeck selected=$rs.RS_ISCHECK/}
+                    </select>
+                    <font color="red">*</font></td>
+            </tr>
+            <tr>
+                <td  class="txt_right">资源类型:</td>
+                <td  class="txt_left">
+                    <select id="rs_class" name="rs_class">
+                        <option value=""></option>
+                        {/html_options options=$rs_class selected=$rs.RS_CLASS/}
+                    </select>
+                    <font color="red">*</font>
+                </td>
+            </tr>
+            <tr>
+                <td  class="txt_right">访问URL:</td>
+                <td  class="txt_left">
+                    <input type="text" id="rs_url" name="rs_url" value="{/$rs.RS_URL/}">
+                </td>
+            </tr>
+            <tr>
+                <td  class="txt_right">mca:</td>
+                <td  class="txt_left">
+                    <input type="text" style="width: 300px;" id="rs_mca" name="rs_mca" value="{/$rs.RS_MCA/}">
+                </td>
+            </tr>
+            <tr>
+                <td class="txt_right">排序:</td>
+                <td  class="txt_left">
+                    <input type="text" style="width: 300px;" id="rs_index" name="rs_index" value="{/$rs.RS_INDEX/}">
+                </td>
+            </tr>
+            <tr>
+                <td  class="txt_right">描述:</td>
+                <td  class="txt_left">
+                    <textarea id="rs_note" name="rs_note">{/$rs.RS_NOTE|nl2br/}</textarea>
+            </tr>
+            <tr>
+                <td colspan="2" class="txt_center">
+                    <input type="button" value="保存" onclick="dosubmit();" class="btn_70">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{/include file="footer.html"/}
+<script language="javascript">
+    var postUrl = "{/$url/}";
+    var parentParams = window.dialogArguments;
+  
+    function dosubmit()
+    {
+        var rs_name = $.trim($('#rs_name').val());
+        var rs_type = $.trim($('#rs_type').val());
+        var rs_ischeck = $.trim($('#rs_ischeck').val());
+        var rs_class = $.trim($('#rs_class').val());
+
+
+        if (rs_name.length == 0) {
+            alert('资源名不能为空');
+            $('#rs_name').focus();
+            return false;
+        }
+        if (rs_type.length == 0) {
+            alert('资源级别不能为空');
+            $('#rs_type').focus();
+            return false;
+        }
+        if (rs_ischeck.length == 0) {
+            alert('是否权限控制不能为空');
+            $('#rs_ischeck').focus();
+            return false;
+        }
+        if (rs_class.length == 0) {
+            alert('资源类型不能为空');
+            $('#rs_class').focus();
+            return false;
+        }
+
+		var url ="{/url modules='user' controller='confirm' action='s1'/}" ;
+		var mark=openModelDialog(url,600,400);
+		if(mark=='1'){
+        var postParams = $('form[name="resource"]').serialize();
+        var submitUrl = postUrl+'?'+postParams;
+        $.ajax({
+            type: "POST",
+            url: submitUrl,
+            dataType : "json",
+            success: function(result){
+                alert(result.msg);
+                if (result.success == true) {
+                	parentParams.location.href=parentParams.location;
+                    window.close();
+                }
+            },
+            complete:function(req,text){
+                if(text!='success'){
+                    alert(text+" "+req.responseText);
+                }
+            }
+        });
+
+		}
+
+        return false;
+    }
+    $(document).ready(function(){
+        $.ajaxSetup({
+            cache:false
+        });
+
+    });
+</script>

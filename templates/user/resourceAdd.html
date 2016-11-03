@@ -1,0 +1,65 @@
+{/include file="header.html"/}
+
+<div class="jj_rightcont">
+    <form name="resource">
+        <input type="hidden" style="width: 300px;" id="state" name="state" value="{/$state/}">
+        <table class="n_tablebox" width="600">
+            <tr class="firsttitle">
+                <td colspan="2">
+                   	 {/$title/}
+                </td>
+            </tr>
+            <tr>
+                <td width="150" class="txt_right">资源名:</td>
+                <td width="450" class="txt_left"><input type="text" style="width: 300px;" id="name" name="name" value="{/$data.name/}"><font color="red">*</font></td>
+            </tr>
+            <tr>
+                <td width="150" class="txt_right">{/$fieldName/}:</td>
+                <td width="450" class="txt_left"><input type="hidden" style="width: 300px;" id="rescode" name="rescode" value="{/$data.rescode/}">{/if $data.rescode!=-1/}{/$data.rescode/}{/else/}顶级{//if/}</td>
+            </tr>
+            <tr>
+                <td  class="txt_right">访问URL:</td>
+                <td  class="txt_left">
+                    <input type="text" id="resurl" name="resurl" style="width: 300px;"  value="{/$data.resurl/}">
+                    <br>
+                   	<font style='color:red'>例："statController/getOnLineNumsAc"</font>
+                </td>
+            </tr>
+            <tr>
+                <td class="txt_right">排序:</td>
+                <td  class="txt_left">
+                    <input type="text" style="width: 300px;" id="resindex" name="resindex" value="{/$data.resindex/}">
+                    <br>
+                   	<font style='color:red'>决定每组的位置</font>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="txt_center">
+                    <input type="button" value="保存" onclick="dosubmit();" class="btn_70">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{/include file="footer.html"/}
+<script language="javascript">
+    var parentParams = window.dialogArguments;
+  
+    function dosubmit()
+    {
+    	var postUrl="{/spUrl c=userController a=sourceAddDoAc/}";
+        var rs_name = $.trim($('#name').val());
+
+        if (rs_name.length == 0) {
+            alert('资源名不能为空');
+            $('#rs_name').focus();
+            return false;
+        }
+        ajax_submit(postUrl, 'resource');
+    }
+    $(document).ready(function(){
+        $.ajaxSetup({
+            cache:false
+        });
+    });
+</script>

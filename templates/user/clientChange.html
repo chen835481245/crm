@@ -1,0 +1,50 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript">
+	//确定提交
+	function submitFun()
+	{
+		var operid=$("#operid").val();
+		var operidNew=$("#operidNew").val();
+		if(operid==''){alert('原操作员不能为空');$("#operid").focus();return false;}
+		if(operidNew==''){alert('现操作员不能为空');$("#operidNew").focus();return false;}
+		if(operid==operidNew){
+			alert('操作员没变化，无需执行');return false;
+		}
+		if(confirm('该操作不可逆，确定执行该操作？')){
+			$.post("{/spUrl c=userController a=doClientChangeAc/}",{operid:operid,operidNew:operidNew},function(res){
+				alert(res.msg);
+			},'json');
+		}
+	}	
+</script>
+	<div class="jj_rightcont" >
+    	<div class="jj_toptitle" ><strong>客户移交</strong></div>
+    	<form name="add">
+    		<table  class="n_tablebox" style="width: 500px">
+    		<tr>
+				<td>原操作员：</td>
+				<td>
+					<select id='operid' name='operid' style='width:200px;'>
+						<option value=''>--请选择--</option>
+						{/html_options options=$operids selected=$operid/}
+					</select>
+				</td>
+   			</tr>
+            <tr>
+				<td>现操作员：</td>
+				<td>
+					<select id='operidNew' name='operidNew' style='width:200px;'>
+						<option value=''>--请选择--</option>
+						{/html_options options=$operids selected=$operid/}
+					</select>
+				</td>
+   			</tr>
+   			</table>
+   			<table  class="n_tablebox" style="width: 500px">
+   				<tr class="firsttitle">
+   					<td><input type="button" value="确定" class='btn_44' onclick="submitFun()"></td>
+   				</tr>
+   			</table>
+    	</form>
+    </div>
+{/include file='templates/footer.html'/}

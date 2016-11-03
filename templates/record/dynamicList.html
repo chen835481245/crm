@@ -1,0 +1,101 @@
+{/include file='templates/header.html'/}
+<script type="text/javascript" src="{/$basePath/}/www/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	//修改
+	function modify_fund(id)
+	{
+		var title='修改日常动态';
+		var url="{/spUrl c=recordController a=dynamicAddAc/}";
+		url+='&id='+id;
+		var id='dynamicAddAc'+Math.floor(Math.random()*1000+1);
+		parent.addNewTab(id,title,url);
+		return false;
+	}
+	//删除
+	function delete_fund(id,file)
+	{
+		var url="{/spUrl c=recordController a=deleteDynamicAc/}";
+		$.post(url,{id:id},function(res){
+			alert(res.msg);
+			if(res.success){
+				var url="{/spUrl c=recordController a=dynamicListAc/}";
+				window.location.href=url;
+			}
+		},'json');
+	}
+</script>
+<div class="jj_rightcont" >
+	<form action="{/spUrl c=recordController a=dynamicListAc/}" method="post" id='paymentForm'>
+	<input type="hidden" value='1' name='isSelect' />
+		<div class="jj_toptitle" >
+			<input type="hidden" value='0' name='out' id='out'/>
+			客户邮箱：
+			<input type='text' name='mail' id='mail' value='{/$mail/}' style='width:80px;'/>
+			{/if $level>2/}
+			业务员：
+			<select id='operid' name='operid' style='width:80px;'>
+				<option value=''>--全部--</option>
+				{/html_options options=$operids selected=$operid/}
+			</select>
+			{//if/}
+			动态：
+			<input type='text' name='content' id='content' value='{/$content/}' style='width:80px;'/>
+			关键词：
+			<input type='text' name='keyword' id='keyword' value='{/$keyword/}' style='width:80px;'/>
+			<select name='is_help' style='width:100px;'>
+				<option value=''>是否需要协助</option>
+				<option value='0' {/if $is_help=='0'/}selected{//if/}>否</option>
+				<option value='1' {/if $is_help==1/}selected{//if/}>是</option>
+			</select>
+			日期：
+			<input type='text' style='width:80px;' value='{/$begin_date/}' name='begin_date' id='begin_date' onclick='WdatePicker({dateFmt:"yyyy-MM-dd",autoUpdateOnChanged:true})'/>
+			至
+			<input type='text' style='width:80px;' value='{/$end_date/}' name='end_date' id='end_date' onclick='WdatePicker({dateFmt:"yyyy-MM-dd",autoUpdateOnChanged:true})'/>
+			&nbsp;
+			<input  type="submit"  value="查询" class='btn_44' onclick="return outFun(0);"/>&nbsp;
+			<input  type="submit"  value="导出" class='btn_44 qxQt' onclick="return outFun(1);" />
+		</div>
+    <table class="n_tablebox" style="width: 1100px">
+        <tr class="firsttitle">
+			<td width="100">日期</td>
+			<td width="100">客户名称</td>
+			<td width="100">客户类型</td>
+			<td width="500">动态</td>
+            <td width="100">客户邮箱</td>
+            <td width="100">是否需要协助</td>
+            <td width="100">操作员</td>
+            <td width="100">操作</td>
+        </tr>
+        {/foreach from=$data.data item=row name=a/}
+        <tr {/if $smarty.foreach.a.iteration % 2 == 0/}class="graytr"{//if/}>
+            <td>{/$row.datetime/}</td>
+            <td>{/$row.first_name/} {/$row.last_name/}</td>
+            <td>{/$row.client_type_name/}</td>
+            <td>{/$row.content/}</td>
+            <td>{/$row.mail/}</td>
+            <td>{/$row.help_name/}</td>
+            <td>{/$row.opername/}</td>
+            <td>
+            	<a onclick="modify_fund('{/$row.id/}');return false;" href="#" title="编辑"  class="qxModify"><img
+				src="{/$basePath/}/www/images/edit.gif" border="0" height="16"
+                width="16"></a>&nbsp;&nbsp;
+				<a onclick="delete_fund('{/$row.id/}');return false;" href="#" title="删除" class="qxDelete"><img
+				src="{/$basePath/}/www/images/delete.png" border="0" height="16"
+				width="16"></a>
+			</td>
+        </tr>
+        {//foreach/}
+        <tr>
+        	<td colspan='8'>{/$data.linkBar/}</td>
+        </tr>
+    </table>
+    </form>
+</div>
+<script type="text/javascript">
+	function outFun(type)
+	{
+		$("#out").val(type);
+		$("form").submit();
+	}
+</script>
+{/include file='templates/footer.html'/}

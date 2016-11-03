@@ -1,0 +1,94 @@
+{/include file='templates/header.html'/}
+	<div class="jj_rightcont" >
+    	<div class="jj_toptitle" ><strong>{/$title/}</strong>
+    	</div>
+    	<form name="add" action="{/spUrl c=emailController a=doAddClientAc/}" method="post">
+    		<input type="hidden" value='{/$data.country/}' name='country' id='country'/>
+    		<input type="hidden" value='{/$data.id/}' name='id'/>
+    		<table  class="n_tablebox" style="width: 800px">
+	            <tr>
+					<td><font color=red>*</font>日期：</td>
+					<td>
+						{/$data.datetime/}
+					</td>
+	   			</tr>
+	   			<tr>
+	   			<td>
+	   				<font color=red>*</font>国家：</td>
+					<td>
+						<input type='text' name='autoid' id='autoid' style='width:300px;'  value='{/$data.country/}'/> 
+					</td>
+				</tr>
+	   			<tr>
+					<td><font color=red>*</font>First Name ( 名 )：</td>
+					<td><input type='text' name='first_name' id='first_name' value='{/$data.first_name/}'></td>
+	   			</tr>
+	   			<tr>
+					<td>Last Name ( 姓)：</td>
+					<td><input type='text' name='last_name' id='last_name' value='{/$data.last_name/}'></td>
+	   			</tr>
+	   			<tr>
+					<td><font color=red>*</font>客户邮箱：</td>
+					<td><input type='text' name='mail' id='mail' value='{/$data.mail/}'></td>
+	   			</tr>
+	   			<tr>
+					<td>备注：</td>
+					<td colspan="3">
+						<textarea rows="5" cols="5" name='remark'>{/$data.remark/}</textarea>
+					</td>
+	   			</tr>
+   			</table>
+   			<table  class="n_tablebox" style="width: 800px">
+   				<tr class="firsttitle">
+   					<td><input type="button" value="确定" class='btn_44' onclick="return submitFun()"></td>
+   				</tr>
+   			</table>
+    	</form>
+    </div>
+	<script type='text/javascript' src='{/$basePath/}/www/js/jquery-autocomplete/jquery.autocomplete.js'></script>
+	<link rel="stylesheet" type="text/css" href="{/$basePath/}/www/js/jquery-autocomplete/jquery.autocomplete.css" />
+    <script type="text/javascript">
+    	var id='{/$data.id/}';
+    	function submitFun()
+    	{
+        	if(!checkNull('first_name','客户名称'))return false;
+        	if(!checkNull('mail','客户邮箱'))return false;
+        	var mail=$("#mail").val();
+        	$.post("{/spUrl c=emailController a=checkMailAc/}",{mail:mail,id:id},function(res){
+				if(res.success){
+					$("form").submit(); 
+				}else{
+					alert(res.msg);return false;
+					}
+            },'json');
+        }
+    	$(function() {
+    		var dataJsonObj=$.parseJSON('{/$countryDataJson/}');
+    		commAuto(dataJsonObj);
+    	});
+    	function commAuto(dataJsonObj){
+    		function format(msg) {
+    			return  msg.id+' '+msg.name;
+    		}
+    		$("#autoid").unautocomplete();
+    		$("#autoid").autocomplete(dataJsonObj, {
+    			max:200,//列表里的条目数
+    			minChars:0, //自动完成激活之前填入的最小字符
+    			width : 300, //提示的宽度，溢出隐藏
+    			scrollHeight : 300, //提示的高度，溢出显示滚动条
+    			matchContains : true, //包含匹配，就是data参数里的数据，是否只要包含文本框里的数据就显示
+    			autoFill : false, //自动填充
+    			cacheLength : 1, //缓存
+    			dataType: "json",
+    			formatItem: function(item) {
+    				return format(item);
+    			},
+    			formatMatch : function(row, i, max) {
+    					return row.id+' '+row.name;
+    					}
+    		}).result(function(e, item) {
+    			$("#country").val(item.id);
+    		});
+    	}
+    </script>
+{/include file='templates/footer.html'/}
