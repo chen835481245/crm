@@ -7,8 +7,9 @@ class gnclientController extends spController
 	public function clientListAc()
 	{
 		$obj=new gnclient();
-		$data=$obj->clientList();
+
 		if($_REQUEST['out']=='1'){
+            $data=$obj->clientList(0,5000);
 			$pubObj=new pub();
 			$titleArr=array("客户姓名","客户公司名称 ","客户邮箱","客户类型","客户电话","客户在线工具","创建日期",
 			"持有者","客户公司网址","客户手机","客户备注");
@@ -18,7 +19,9 @@ class gnclientController extends spController
 			$arrReplaceName=array('datetime');
 			$pubObj->outExcelCommon($data['data'], $titleArr, $keyArr,'',$arrReplaceName);
 			exit;
-		}
+		}else{
+            $data=$obj->clientList();
+        }
 		
 		$userObj=new user();
 		$operids=$userObj->getUserArr();

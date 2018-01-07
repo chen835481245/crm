@@ -1,7 +1,7 @@
 <?php
 class gnclient extends spModel
 {
-	public function clientList($is_gw=0)
+	public function clientList($is_gw=0,$pagesize =20)
 	{
 		$result=array();
 		$data=array();
@@ -10,7 +10,6 @@ class gnclient extends spModel
 		{
 			$page = 1;
 		}
-		$pagesize = 20;
 		$start = ($page - 1) * $pagesize;
 		$company_name=$_REQUEST['company_name'];
 		$first_name=$_REQUEST['first_name'];
