@@ -12,11 +12,11 @@ $spConfig=array(
 		'persistent'=>false,
 		'0'=>array(
 		'driver' => 'mysql',   // 驱动类型
-		'host' => 'develop.19baba.com', // 数据库地址
+		'host' => '127.0.0.1', // 数据库地址
 		'port' => 3306,        // 端口
-		'login' => 'hzxq',     // 用户名
-		'password' => "xsdc311ch",      // 密码
-		'database' => 'crmnew'
+		'login' => 'root',     // 用户名
+		'password' => "",      // 密码
+		'database' => 'keyword'
 		)
 	),
 	'myUrl'=>'http://127.0.0.1',

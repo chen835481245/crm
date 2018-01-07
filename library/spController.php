@@ -19,7 +19,7 @@ class spController
 		$this->v->caching = false;
 		$this->v->cache_lifetime = 120;
 		$this->v->registerPlugin('function','spUrl','spUrlView');
-		$this->basePath= BASE_PATH;//项目的根目录
+		$this->basePath= '.';//BASE_PATH;//项目的根目录
 		$this->title=$GLOBALS['spConfig']['title'];
 		$this->userInfo=json_encode($_SESSION['userInfo']); 
 		$pub=new pub();
